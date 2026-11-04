@@ -74,9 +74,9 @@
         "zh": "在右侧边栏列出当前会话正在运行的端口，点击即可在浏览器中打开。"
       },
       "author": "yujieco",
-      "homepage": "https://github.com/yujieco/yujie-dsh-plugin-sider-motion#readme",
       "repository": {
-        "url": "https://github.com/yujieco/yujie-dsh-plugin-sider-motion"
+        "url": "https://github.com/yujieco/yujie-dsh-plugins",
+        "directory": "plugins/sider-motion"
       },
       "metadata": {
         "category": "developer-tools",
@@ -96,11 +96,11 @@
       "versions": [
         {
           "version": "1.0.0",
-          "publishTimestamp": 1793805304,
+          "publishTimestamp": 1793805924,
           "source": {
             "type": "git",
             "url": "https://github.com/yujieco/yujie-dsh-plugins",
-            "commit": "44ca5b0d80a466072d84c76d223ac554714486a9",
+            "commit": "7face335dcd17df53484790996e28803c9c448e3",
             "path": "plugins/sider-motion"
           }
         }
@@ -145,7 +145,7 @@
           "source": {
             "type": "git",
             "url": "https://github.com/yujieco/yujie-dsh-plugins",
-            "commit": "44ca5b0d80a466072d84c76d223ac554714486a9",
+            "commit": "7face335dcd17df53484790996e28803c9c448e3",
             "path": "plugins/cdp"
           }
         }
@@ -186,7 +186,7 @@
           "source": {
             "type": "git",
             "url": "https://github.com/yujieco/yujie-dsh-plugins",
-            "commit": "44ca5b0d80a466072d84c76d223ac554714486a9",
+            "commit": "7face335dcd17df53484790996e28803c9c448e3",
             "path": "plugins/system-prompt"
           }
         }
