@@ -100,7 +100,7 @@
           "source": {
             "type": "git",
             "url": "https://github.com/yujieco/yujie-dsh-plugins",
-            "commit": "197864ee3d4d7b82cd9b4ce419b27d407ae831c2",
+            "commit": "f3f41378538365da049397b694e09a366dfe6581",
             "path": "plugins/sider-motion"
           }
         }
@@ -114,8 +114,8 @@
         "zh": "CDP 浏览器操控"
       },
       "description": {
-        "en": "Drive Chrome or Edge over the Chrome DevTools Protocol: open pages, read the screen as images, click and type, and collect console errors and uncaught exceptions.",
-        "zh": "通过 Chrome DevTools 协议驱动 Chrome 或 Edge：打开页面、把画面读成图片、点击与输入，并收集控制台报错和未捕获异常。"
+        "en": "Drive Chrome or Edge over CDP: read pages as structured snapshots or text, click with a visible agent cursor, capture grid or sliced screenshots, watch a live right-sidebar view, and collect console errors.",
+        "zh": "通过 CDP 驱动 Chrome 或 Edge：以结构快照或文本读取页面、用可见鼠标点击、截取带网格或分片的画面、在右侧栏看实时画面，并收集控制台报错。"
       },
       "author": "yujieco",
       "repository": {
@@ -141,11 +141,11 @@
       "versions": [
         {
           "version": "0.2.0",
-          "publishTimestamp": 1793806737,
+          "publishTimestamp": 1793806745,
           "source": {
             "type": "git",
             "url": "https://github.com/yujieco/yujie-dsh-plugins",
-            "commit": "197864ee3d4d7b82cd9b4ce419b27d407ae831c2",
+            "commit": "f3f41378538365da049397b694e09a366dfe6581",
             "path": "plugins/cdp"
           }
         }
@@ -186,7 +186,7 @@
           "source": {
             "type": "git",
             "url": "https://github.com/yujieco/yujie-dsh-plugins",
-            "commit": "197864ee3d4d7b82cd9b4ce419b27d407ae831c2",
+            "commit": "f3f41378538365da049397b694e09a366dfe6581",
             "path": "plugins/system-prompt"
           }
         }
