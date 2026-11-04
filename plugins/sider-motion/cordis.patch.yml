@@ -1,0 +1,4 @@
+- insert:
+    - id: sider-motion
+      name: 'yujie-dsh-plugin-sider-motion'
+      config: {}

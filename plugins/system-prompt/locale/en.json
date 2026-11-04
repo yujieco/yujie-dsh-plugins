@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Custom System Prompt",
+    "description": "Inject your own system prompt at the start of every conversation; edit it from this plugin's page in Plugins."
+  }
+}

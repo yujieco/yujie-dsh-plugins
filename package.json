@@ -1,0 +1,18 @@
+{
+  "name": "yujie-dsh-plugins",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Central DeepSeek Harness plugin market: index.json plus the plugins it publishes.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yujieco/yujie-dsh-plugins.git"
+  },
+  "scripts": {
+    "build:index": "node scripts/build-index.mjs",
+    "validate:index": "node scripts/validate-index.mjs"
+  },
+  "devDependencies": {
+    "@deepseek-ai/dsh-plugin-market-index": "0.2.1-rc.5"
+  }
+}

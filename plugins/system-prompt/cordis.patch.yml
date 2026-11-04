@@ -1,0 +1,5 @@
+# Bundle patch layer: one Host row that owns the injected system-prompt section
+# and the editable `prompt` / `enabled` configuration served to the Plugins page.
+- insert:
+    - id: yujie-dsh-plugin-system-prompt
+      name: yujie-dsh-plugin-system-prompt

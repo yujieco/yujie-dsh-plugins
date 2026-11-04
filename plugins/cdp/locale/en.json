@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "title": "CDP Browser Control",
+    "description": "Drive Chrome or Edge over the Chrome DevTools Protocol: open pages, read the screen as images, click and type, and collect console errors and uncaught exceptions."
+  },
+  "tools": {
+    "launch": "Start a controlled Chrome or Edge instance, or attach to one that already exposes a DevTools port.",
+    "pages": "List, open, select, or close browser pages.",
+    "navigate": "Navigate the current page and wait for it to settle.",
+    "screenshot": "Capture what the browser currently shows and return it as an image.",
+    "snapshot": "List the interactive elements of the page with stable refs, roles, and click coordinates.",
+    "console": "Read collected console messages, uncaught exceptions, and failed requests.",
+    "click": "Click an element by ref or CSS selector, or click page coordinates.",
+    "type": "Focus an element and type text, optionally submitting it.",
+    "evaluate": "Evaluate JavaScript in the page and return the value.",
+    "openDsh": "Open this Harness web GUI in the controlled browser with a valid access token.",
+    "close": "Close the controlled browser and drop its DevTools connection and collected errors.",
+    "read": "Read the readable text of the page or one element as plain text, without an image."
+  },
+  "panel": {
+    "title": "Browser panel",
+    "description": "Live screen, pages, and recent errors of the browser this Session controls."
+  }
+}

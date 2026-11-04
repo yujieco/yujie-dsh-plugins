@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Session Ports",
+    "description": "A right-sidebar panel that lists the ports the current session is serving and opens any of them in the browser."
+  }
+}

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Session Ports">
+  <defs>
+    <linearGradient id="spGrad" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2f7cf6"/>
+      <stop offset="1" stop-color="#1348b8"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="56" height="56" rx="16" fill="url(#spGrad)"/>
+  <rect x="13" y="21" width="38" height="22" rx="7" fill="none" stroke="#ffffff" stroke-width="3.2"/>
+  <path d="M22 43v8M32 43v8M42 43v8" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M22 13v6M42 13v6" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round"/>
+  <circle cx="32" cy="32" r="4.2" fill="#7ef0b6"/>
+</svg>

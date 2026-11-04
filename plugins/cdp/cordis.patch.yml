@@ -1,0 +1,4 @@
+# Bundle patch layer: one Host row that owns the CDP browser tools.
+- insert:
+    - id: yujie-dsh-plugin-cdp
+      name: yujie-dsh-plugin-cdp
