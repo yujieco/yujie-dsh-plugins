@@ -56,22 +56,31 @@ Host 端两路证据 + 一次真实探测，缺一不可：
 
 前提：DeepSeek Harness `0.2.x`（桌面版，Web GUI 由本机 HTTP 服务提供）。插件本身零运行时依赖。
 
-```bash
-git clone https://github.com/yujieco/yujie-dsh-plugin-sider-motion.git
+### 从中央插件市场安装（推荐）
+
+在 DSH 里打开 **插件 → 发现（Discover）**，添加索引源：
+
+```text
+https://raw.githubusercontent.com/yujieco/yujie-dsh-plugins/main/index.json
 ```
 
-然后在 Harness 里把该目录安装为本地 bundle（推荐直接让助手执行）：
+然后在市场里选中「会话端口」，点 **Install**。市场按 Git 提交安装，装到的就是发布时的那份代码。
+
+### 从源码安装
+
+```bash
+git clone https://github.com/yujieco/yujie-dsh-plugins.git
+```
+
+把 `plugins/sider-motion` 安装为本地 bundle（推荐直接让助手执行）：
 
 ```text
 plugin_manager
   action: install_bundle
-  target: /绝对路径/yujie-dsh-plugin-sider-motion
+  target: /绝对路径/yujie-dsh-plugins/plugins/sider-motion
 ```
 
 成功时返回 `application: applied`，插件行 id 为 `sider-motion`。安装即启用。
-
-> 如果本机把 `dsh` 加进了 `PATH`，也可以发布到 npm 后用
-> `dsh plugin --profile <profile> install <包名>` 安装。
 
 ## 六、打开 / 启用 / 停用
 

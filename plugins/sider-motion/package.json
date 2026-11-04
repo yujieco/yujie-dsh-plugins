@@ -43,13 +43,14 @@
     "vite",
     "react"
   ],
-  "homepage": "https://github.com/yujieco/yujie-dsh-plugin-sider-motion#readme",
+  "homepage": "https://github.com/yujieco/yujie-dsh-plugins/tree/main/plugins/sider-motion#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yujieco/yujie-dsh-plugin-sider-motion.git"
+    "url": "git+https://github.com/yujieco/yujie-dsh-plugins.git",
+    "directory": "plugins/sider-motion"
   },
   "bugs": {
-    "url": "https://github.com/yujieco/yujie-dsh-plugin-sider-motion/issues"
+    "url": "https://github.com/yujieco/yujie-dsh-plugins/issues"
   },
   "author": "yujieco"
 }

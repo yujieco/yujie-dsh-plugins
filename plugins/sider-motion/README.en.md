@@ -56,22 +56,31 @@ Two sources of evidence on the Host plus one real probe:
 
 Requires DeepSeek Harness `0.2.x` (desktop; the Web GUI is served over local HTTP). The plugin has no runtime dependencies.
 
-```bash
-git clone https://github.com/yujieco/yujie-dsh-plugin-sider-motion.git
+### From the central plugin market (recommended)
+
+In DSH open **Plugins → Discover** and add an index source:
+
+```text
+https://raw.githubusercontent.com/yujieco/yujie-dsh-plugins/main/index.json
 ```
 
-Then install that directory as a local bundle inside Harness (ask the agent to run it):
+Then select **Session Ports** in the market and press **Install**. The market installs from a pinned Git commit, so you get exactly the published bytes.
+
+### From source
+
+```bash
+git clone https://github.com/yujieco/yujie-dsh-plugins.git
+```
+
+Install `plugins/sider-motion` as a local bundle (ask the agent to run it):
 
 ```text
 plugin_manager
   action: install_bundle
-  target: /absolute/path/to/yujie-dsh-plugin-sider-motion
+  target: /absolute/path/to/yujie-dsh-plugins/plugins/sider-motion
 ```
 
 A successful install returns `application: applied`; the plugin row id is `sider-motion`. Installing enables it.
-
-> If `dsh` is on your `PATH`, publishing to npm and running
-> `dsh plugin --profile <profile> install <package>` is the alternative.
 
 ## 6. Open, enable, disable
 
