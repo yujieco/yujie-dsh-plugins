@@ -36,7 +36,7 @@ so you install exactly the bytes the index published, not whatever the branch ho
 | Plugin | What it does | Directory |
 | --- | --- | --- |
 | `yujie-dsh-plugin-sider-motion` | Lists the ports the current session is serving in the right sidebar; one click opens one in the browser | [`plugins/sider-motion`](plugins/sider-motion) |
-| `yujie-dsh-plugin-cdp` | Drives Chrome or Edge over the Chrome DevTools Protocol: screenshots, clicks, typing, console errors | [`plugins/cdp`](plugins/cdp) |
+| `yujie-dsh-plugin-cdp` | Drives Chrome or Edge over CDP: structured snapshots and text, grid screenshots, a visible agent cursor that clicks, a live right-sidebar view, collected console errors | [`plugins/cdp`](plugins/cdp) |
 | `yujie-dsh-plugin-system-prompt` | Injects your own text at the start of every conversation's system prompt, editable from the plugin page | [`plugins/system-prompt`](plugins/system-prompt) |
 
 Each plugin directory has its own README with details, installation, and usage.

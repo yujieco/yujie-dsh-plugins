@@ -36,7 +36,7 @@ https://yujieco.github.io/yujie-dsh-plugins/index.json
 | 插件 | 作用 | 目录 |
 | --- | --- | --- |
 | `yujie-dsh-plugin-sider-motion` | 会话右侧边栏列出本会话正在监听的端口，点击即在浏览器打开 | [`plugins/sider-motion`](plugins/sider-motion) |
-| `yujie-dsh-plugin-cdp` | 通过 Chrome DevTools Protocol 驱动 Chrome/Edge：截图、点击、输入、收集控制台异常 | [`plugins/cdp`](plugins/cdp) |
+| `yujie-dsh-plugin-cdp` | 通过 CDP 驱动 Chrome/Edge：结构快照/文本/网格截图、可见鼠标点击、右侧栏实时画面、异常采集 | [`plugins/cdp`](plugins/cdp) |
 | `yujie-dsh-plugin-system-prompt` | 在每次对话的系统提示词开头注入自定义内容，可在插件页编辑 | [`plugins/system-prompt`](plugins/system-prompt) |
 
 每个插件的详细说明、安装与使用见各自目录下的 README。

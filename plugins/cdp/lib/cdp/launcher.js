@@ -247,6 +247,9 @@ export async function launchBrowser(options) {
     '--disable-features=Translate,MediaRouter,OptimizationHints',
     `--window-size=${options.windowSize ?? '1280,900'}`,
   ]
+  // The visible "controlled by automated test software" infobar: it tells the
+  // human at the screen that an agent owns this window.
+  if (options.automationBanner !== false) args.push('--enable-automation')
   if (options.headless !== false) {
     args.push('--headless=new', '--disable-gpu')
   }

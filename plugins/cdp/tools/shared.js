@@ -28,15 +28,13 @@ export async function ensureSession(hub, exec) {
  * @returns {Promise<{ delivered: object, width: number, height: number }>} delivery facts.
  */
 export async function shoot(session, ctx, exec, config, options = {}) {
-  const info = await session.info()
   const clip = options.clip
   const targetWidth = options.maxWidth ?? config.autoScreenshotMaxWidth ?? 1024
-  const clipWidth = clip?.width ?? info.viewport.width
-  const scale = clipWidth > targetWidth ? targetWidth / clipWidth : 1
+  const width = clip?.width ?? targetWidth
   const shot = await capturePage(session.send.bind(session), {
     fullPage: options.fullPage === true && clip === undefined,
     clip,
-    scale,
+    maxWidth: width,
     format: options.format,
     quality: options.quality,
     maxHeight: config.maxCaptureHeight ?? 4000,
@@ -87,7 +85,8 @@ export function describeShot(shot) {
 export async function shootSlices(session, ctx, exec, config, options = {}) {
   const targetWidth = options.maxWidth ?? config.autoScreenshotMaxWidth ?? 1024
   const info = await session.info()
-  const scale = info.viewport.width > targetWidth ? targetWidth / info.viewport.width : 1
+  const deviceWidth = info.viewport.width * (info.dpr > 0 ? info.dpr : 1)
+  const scale = deviceWidth > targetWidth ? targetWidth / deviceWidth : 1
   const slices = await captureSlices(session.send.bind(session), {
     sliceHeight: options.sliceHeight ?? config.sliceHeight ?? 2400,
     maxSlices: options.maxSlices ?? config.maxSlices ?? 6,

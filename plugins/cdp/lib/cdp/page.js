@@ -265,11 +265,14 @@ function measureProgram(locator) {
       y += frameRect.top + win.frameElement.clientTop;
       win = win.parent;
     }
+    const hit = document.elementFromPoint(Math.round(x), Math.round(y));
     return {
       x: Math.round(x), y: Math.round(y),
       width: Math.round(rect.width), height: Math.round(rect.height),
       pageX: Math.round(x + window.scrollX), pageY: Math.round(y + window.scrollY),
       text: String(node.innerText ?? node.value ?? '').slice(0, 200),
+      connected: node.isConnected !== false,
+      hitMatches: hit !== null && (hit === node || node.contains(hit) || hit.contains(node)),
     };
   })()`
 }
@@ -384,6 +387,26 @@ export async function readText(send, options = {}) {
 }
 
 /**
+ * Read the layout viewport in CSS pixels, in the same space as element rects.
+ * @param {(method: string, params?: object) => Promise<any>} send - session sender.
+ * @returns {Promise<{ width: number, height: number }>} the viewport size.
+ */
+async function readViewportSize(send) {
+  try {
+    const result = await send('Runtime.evaluate', { expression: '({ width: innerWidth, height: innerHeight, dpr: devicePixelRatio })', returnByValue: true })
+    const value = result.result?.value
+    if (value !== undefined && value.width > 0 && value.height > 0) {
+      return { width: value.width, height: value.height, dpr: value.dpr > 0 ? value.dpr : 1 }
+    }
+  } catch {
+    // fall through to metrics
+  }
+  const metrics = await send('Page.getLayoutMetrics')
+  const viewport = metrics.cssLayoutViewport ?? metrics.layoutViewport ?? { clientWidth: 1280, clientHeight: 720 }
+  return { width: Math.ceil(viewport.clientWidth), height: Math.ceil(viewport.clientHeight), dpr: 1 }
+}
+
+/**
  * Capture the page as image bytes.
  * @param {(method: string, params?: object) => Promise<any>} send - session sender.
  * @param {{ clip?: { x: number, y: number, width: number, height: number }, scale?: number, fullPage?: boolean, format?: 'png'|'jpeg', quality?: number, maxHeight?: number }} [options] - capture options.
@@ -391,15 +414,15 @@ export async function readText(send, options = {}) {
  */
 export async function capturePage(send, options = {}) {
   const format = options.format === 'jpeg' ? 'jpeg' : 'png'
-  const scale = options.scale ?? 1
   const params = { format, fromSurface: true }
   if (format === 'jpeg') params.quality = Math.max(1, Math.min(options.quality ?? 80, 100))
+  const viewport = await readViewportSize(send)
+  const deviceWidth = (options.clip?.width ?? viewport.width) * viewport.dpr
+  const scale = options.maxWidth === undefined ? (options.scale ?? 1) : Math.min(1, options.maxWidth / Math.max(1, deviceWidth))
   if (options.clip !== undefined) {
     params.clip = { x: options.clip.x, y: options.clip.y, width: options.clip.width, height: options.clip.height, scale }
   } else if (options.fullPage !== true && scale !== 1) {
-    const metrics = await send('Page.getLayoutMetrics')
-    const viewport = metrics.cssLayoutViewport ?? metrics.layoutViewport ?? { clientWidth: 1280, clientHeight: 720 }
-    params.clip = { x: 0, y: 0, width: Math.ceil(viewport.clientWidth), height: Math.ceil(viewport.clientHeight), scale }
+    params.clip = { x: 0, y: 0, width: Math.ceil(viewport.width), height: Math.ceil(viewport.height), scale }
   }
   if (options.fullPage === true) {
     const metrics = await send('Page.getLayoutMetrics')
@@ -516,3 +539,90 @@ export function imageSize(data, format) {
 
 /** The selector list is exported for diagnostics. */
 export const interactiveSelector = INTERACTIVE_SELECTOR
+
+/**
+ * Install the visible control layer: a cursor the automation moves before it
+ * clicks. It lives in a fixed overlay with `pointer-events: none`, so it never
+ * changes what the page can hit.
+ * @param {(method: string, params?: object) => Promise<any>} send - session sender.
+ * @returns {Promise<void>} resolves after the layer exists.
+ */
+export async function installControlOverlay(send) {
+  const program = function installOverlay() {
+    if (document.getElementById('__yujieControlLayer') !== null) return true
+    const layer = document.createElement('div')
+    layer.id = '__yujieControlLayer'
+    layer.style.cssText = 'position:fixed;inset:0;z-index:2147483646;pointer-events:none;overflow:hidden'
+    const cursor = document.createElement('div')
+    cursor.id = '__yujieCursor'
+    cursor.style.cssText = 'position:absolute;left:0;top:0;transform:translate(-120px,-120px);will-change:transform;filter:drop-shadow(0 3px 7px rgba(0,0,0,.45)) drop-shadow(0 0 10px rgba(59,110,246,.85))'
+    cursor.innerHTML = '<svg width="34" height="34" viewBox="0 0 34 34"><path d="M5 3l23 13.7-9.6 1.9 5.6 11-4.4 2.1-5.6-11.1-6 5.9z" fill="#1f6bff" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg>'
+    layer.appendChild(cursor)
+    document.documentElement.appendChild(layer)
+    window.__yujieCursorPos = { x: -120, y: -120 }
+    return true
+  }
+  await evaluate(send, `(() => (${program.toString()})())()`)
+}
+
+/**
+ * Animate the visible cursor to one point.
+ * @param {(method: string, params?: object) => Promise<any>} send - session sender.
+ * @param {number} x - viewport x.
+ * @param {number} y - viewport y.
+ * @param {number} [durationMs] - travel time.
+ * @returns {Promise<void>} resolves when the animation ends.
+ */
+export async function moveCursor(send, x, y, durationMs = 260) {
+  const program = function moveTo(input) {
+    const cursor = document.getElementById('__yujieCursor')
+    if (cursor === null) return Promise.resolve(false)
+    cursor.style.transition = 'transform ' + input.duration + 'ms cubic-bezier(.22,.61,.36,1)'
+    cursor.style.transform = 'translate(' + input.x + 'px,' + input.y + 'px)'
+    window.__yujieCursorPos = { x: input.x, y: input.y }
+    return new Promise(resolve => setTimeout(() => resolve(true), input.duration + 20))
+  }
+  const moved = await evaluate(send, `(() => (${program.toString()})(${JSON.stringify({ x, y, duration: durationMs })}))()`, { awaitPromise: true })
+  if (moved !== true) throw new Error('the control overlay is not installed')
+}
+
+/**
+ * Draw a click ripple, and optionally a small label, at one point.
+ * @param {(method: string, params?: object) => Promise<any>} send - session sender.
+ * @param {number} x - viewport x.
+ * @param {number} y - viewport y.
+ * @param {string} [label] - short action label such as `click`.
+ * @returns {Promise<void>} resolves after the ripple is scheduled.
+ */
+export async function rippleAt(send, x, y, label) {
+  const program = function ripple(input) {
+    const layer = document.getElementById('__yujieControlLayer')
+    if (layer === null) return false
+    const dot = document.createElement('div')
+    dot.style.cssText = 'position:absolute;left:' + input.x + 'px;top:' + input.y + 'px;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;border:2px solid rgba(59,110,246,.95);background:rgba(59,110,246,.18)'
+    layer.appendChild(dot)
+    dot.animate([
+      { transform: 'scale(.35)', opacity: 1 },
+      { transform: 'scale(2.1)', opacity: 0 },
+    ], { duration: 1800, easing: 'cubic-bezier(.2,.6,.3,1)' })
+    setTimeout(() => dot.remove(), 1900)
+    if (input.label !== undefined && input.label !== '') {
+      const tag = document.createElement('div')
+      tag.textContent = input.label
+      tag.style.cssText = 'position:absolute;left:' + (input.x + 18) + 'px;top:' + (input.y + 16) + 'px;font:600 11px/1 ui-monospace,SFMono-Regular,monospace;color:#fff;background:rgba(17,24,39,.9);padding:3px 6px;border-radius:5px'
+      layer.appendChild(tag)
+      setTimeout(() => tag.remove(), 2000)
+    }
+    return true
+  }
+  await evaluate(send, `(() => (${program.toString()})(${JSON.stringify({ x, y, label })}))()`)
+}
+
+/**
+ * Remove the visible control layer.
+ * @param {(method: string, params?: object) => Promise<any>} send - session sender.
+ * @returns {Promise<void>} resolves after removal.
+ */
+export async function clearControlOverlay(send) {
+  await evaluate(send, `(() => { const layer = document.getElementById('__yujieControlLayer'); if (layer !== null) layer.remove(); return true; })()`)
+}

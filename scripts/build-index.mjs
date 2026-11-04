@@ -31,8 +31,7 @@ const MARKET = {
     category: 'developer-tools',
     labels: ['sidebar', 'ports'],
     keywords: ['ports', 'dev-server', 'sidebar', 'vite', 'localhost', 'preview'],
-    homepage: 'https://github.com/yujieco/yujie-dsh-plugin-sider-motion#readme',
-    repository: { url: 'https://github.com/yujieco/yujie-dsh-plugin-sider-motion' },
+    repository: { url: REPOSITORY, directory: 'plugins/sider-motion' },
     directory: 'plugins/sider-motion',
   },
   'yujie-dsh-plugin-cdp': {

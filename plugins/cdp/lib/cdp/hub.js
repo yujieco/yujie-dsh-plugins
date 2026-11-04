@@ -149,6 +149,7 @@ export class BrowserSession {
       startupUrl: options.startupUrl ?? 'about:blank',
       noSandbox: options.noSandbox ?? this.config.noSandbox,
       disableExtensions: options.disableExtensions ?? this.config.disableExtensions,
+      automationBanner: this.config.automationBanner !== false,
       launchTimeoutMs: this.config.launchTimeoutMs ?? 20000,
     })
     this.launched = launched.attached !== true
@@ -271,6 +272,8 @@ export class BrowserSession {
     if (this.config.collectNetwork !== false) {
       await run('Network.enable', { maxTotalBufferSize: 10000000, maxResourceBufferSize: 5000000 })
     }
+    // Bring the window to the front so a human can watch the automation happen.
+    await run('Page.bringToFront').catch(() => {})
   }
 
   /**

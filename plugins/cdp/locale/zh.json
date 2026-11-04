@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "CDP 浏览器操控",
-    "description": "通过 Chrome DevTools 协议驱动 Chrome 或 Edge：打开页面、把画面读成图片、点击与输入，并收集控制台报错和未捕获异常。"
+    "description": "通过 CDP 驱动 Chrome 或 Edge：以结构快照或文本读取页面、用可见鼠标点击、截取带网格或分片的画面、在右侧栏看实时画面，并收集控制台报错。"
   },
   "tools": {
     "launch": "启动一个受控的 Chrome 或 Edge 实例，或依附到已经暴露调试端口的实例。",

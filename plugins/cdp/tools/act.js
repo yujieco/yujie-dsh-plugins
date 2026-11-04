@@ -4,7 +4,7 @@
  * @module yujie-dsh-plugin-cdp/tools/act
  */
 import { defineTool } from '../lib/tool.js'
-import { clickAt, measureTarget, typeTarget } from '../lib/cdp/page.js'
+import { clickAt, installControlOverlay, measureTarget, moveCursor, rippleAt, typeTarget } from '../lib/cdp/page.js'
 import { imageBlocks } from '../lib/media.js'
 import { describePage, describeShot, ensureSession, shoot, textOf } from './shared.js'
 
@@ -62,6 +62,7 @@ export function registerActTools(ctx, config, hub) {
           ok: { type: 'boolean', required: true },
           x: { type: 'number' },
           y: { type: 'number' },
+          hitMatches: { type: 'boolean' },
           url: { type: 'string' },
           title: { type: 'string' },
           width: { type: 'number' },
@@ -73,7 +74,7 @@ export function registerActTools(ctx, config, hub) {
       render: (_args, value) => [{
         type: 'text',
         text: textOf([
-          `clicked (${value.x},${value.y}) — ${describePage(value)}`,
+          `clicked (${value.x},${value.y})${value.hitMatches === false ? ' — warning: the element moved or is covered; call browser_snapshot for fresh refs' : ''} — ${describePage(value)}`,
           value.image === undefined && value.path === undefined ? '' : describeShot({ delivered: value }),
         ]),
       }, ...imageBlocks(value)],
@@ -82,6 +83,7 @@ export function registerActTools(ctx, config, hub) {
       const session = await ensureSession(hub, exec)
       let x = args.x
       let y = args.y
+      let hitMatches = true
       const hasCoordinates = typeof x === 'number' && typeof y === 'number'
       if (!hasCoordinates) {
         if ((typeof args.ref !== 'string' || args.ref === '') && (typeof args.selector !== 'string' || args.selector === '')) {
@@ -90,11 +92,18 @@ export function registerActTools(ctx, config, hub) {
         const measured = await measureTarget(session.send.bind(session), { ref: args.ref, selector: args.selector })
         x = measured.x
         y = measured.y
+        hitMatches = measured.hitMatches !== false
+      }
+      const showCursor = config.showCursor !== false
+      if (showCursor) {
+        await installControlOverlay(session.send.bind(session)).catch(() => {})
+        await moveCursor(session.send.bind(session), x, y, config.cursorMoveMs ?? 260).catch(() => {})
       }
       await clickAt(session.send.bind(session), { x, y, button: args.button, clickCount: args.clickCount })
+      if (showCursor) await rippleAt(session.send.bind(session), x, y, 'click').catch(() => {})
       await new Promise(resolve => setTimeout(resolve, config.clickSettleMs ?? 120))
       const info = await session.info()
-      const value = { ok: true, x, y, url: info.url, title: info.title }
+      const value = { ok: true, x, y, hitMatches, url: info.url, title: info.title }
       if (args.screenshot === false || config.autoScreenshot === false) return value
       const shot = await shoot(session, ctx, exec, config, { maxWidth: config.autoScreenshotMaxWidth })
       return { ...value, ...shot.delivered }
@@ -141,6 +150,14 @@ export function registerActTools(ctx, config, hub) {
         throw new Error('pass ref (from browser_snapshot) or selector for the field to type into')
       }
       const targetLabel = typeof args.ref === 'string' && args.ref !== '' ? `ref ${args.ref}` : String(args.selector)
+      if (config.showCursor !== false) {
+        const measured = await measureTarget(session.send.bind(session), locator).catch(() => undefined)
+        if (measured !== undefined) {
+          await installControlOverlay(session.send.bind(session)).catch(() => {})
+          await moveCursor(session.send.bind(session), measured.x, measured.y, config.cursorMoveMs ?? 260).catch(() => {})
+          await rippleAt(session.send.bind(session), measured.x, measured.y, 'type').catch(() => {})
+        }
+      }
       const typed = await typeTarget(session.send.bind(session), locator, {
         text: args.text,
         clear: args.clear === true,

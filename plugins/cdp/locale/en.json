@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "CDP Browser Control",
-    "description": "Drive Chrome or Edge over the Chrome DevTools Protocol: open pages, read the screen as images, click and type, and collect console errors and uncaught exceptions."
+    "description": "Drive Chrome or Edge over CDP: read pages as structured snapshots or text, click with a visible agent cursor, capture grid or sliced screenshots, watch a live right-sidebar view, and collect console errors."
   },
   "tools": {
     "launch": "Start a controlled Chrome or Edge instance, or attach to one that already exposes a DevTools port.",

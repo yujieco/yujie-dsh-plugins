@@ -1,8 +1,8 @@
 {
   "name": "yujie-dsh-plugin-cdp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
-  "description": "Drive Chrome or Edge over the Chrome DevTools Protocol: open pages, read the screen as images, click and type, and collect console errors and uncaught exceptions.",
+  "description": "Drive Chrome or Edge over CDP: read pages as structured snapshots or text, click with a visible agent cursor, capture grid or sliced screenshots, watch a live right-sidebar view, and collect console errors.",
   "type": "module",
   "main": "index.js",
   "exports": {
