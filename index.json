@@ -84,11 +84,11 @@
       "versions": [
         {
           "version": "1.0.0",
-          "publishTimestamp": 1793805924,
+          "publishTimestamp": 1794901067,
           "source": {
             "type": "git",
             "url": "https://github.com/yujieco/yujie-dsh-plugins",
-            "commit": "f748bcb20f817043702ff5a3d7cd546ffbbacf50",
+            "commit": "3612d4af22738b4897d90e60ef4bd5de52e3efe1",
             "path": "plugins/sider-motion"
           }
         }
@@ -129,11 +129,11 @@
       "versions": [
         {
           "version": "0.2.1",
-          "publishTimestamp": 1794900836,
+          "publishTimestamp": 1794901067,
           "source": {
             "type": "git",
             "url": "https://github.com/yujieco/yujie-dsh-plugins",
-            "commit": "f748bcb20f817043702ff5a3d7cd546ffbbacf50",
+            "commit": "3612d4af22738b4897d90e60ef4bd5de52e3efe1",
             "path": "plugins/cdp"
           }
         }
