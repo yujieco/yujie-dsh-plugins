@@ -61,7 +61,7 @@ DSH validates indexes with `@deepseek-ai/dsh-plugin-market-index`. The essential
       "description": { "en": "…", "zh": "…" },
       "icon": "data:image/svg+xml;base64,…",
       "author": "yujieco",
-      "homepage": "https://github.com/yujieco/yujie-dsh-plugin-sider-motion#readme",
+      "homepage": "https://github.com/yujieco/yujie-dsh-plugins/tree/main/plugins/sider-motion#readme",
       "repository": { "url": "https://github.com/yujieco/yujie-dsh-plugins", "directory": "plugins/sider-motion" },
       "metadata": { "category": "developer-tools", "labels": ["sidebar"], "keywords": ["ports"] },
       "versions": [
