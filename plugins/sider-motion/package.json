@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "description": "DeepSeek Harness 插件：在会话右侧边栏实时列出正在监听的端口，点击即可在浏览器打开。Right-sidebar panel listing the session ports with one-click browser open.",
+  "license": "MIT",
   "exports": {
     ".": "./index.js",
     "./client": "./client.js",

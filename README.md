@@ -58,6 +58,7 @@ https://raw.githubusercontent.com/yujieco/yujie-dsh-plugins/main/index.json
 ```text
 .
 ├── index.json                 # format 1 市场索引（唯一权威）
+├── LICENSE                    # MIT 许可证
 ├── plugins/
 │   ├── cdp/                   # yujie-dsh-plugin-cdp
 │   └── sider-motion/          # yujie-dsh-plugin-sider-motion
@@ -124,8 +125,8 @@ CI 在工作流 **validate index** 中运行，触发条件是 `push` 到 `main`
 
 ## 边界与已知限制
 
-- **没有 LICENSE 文件**。仓库当前未附带许可证，因此按默认版权保留全部权利；请不要在本仓库
-  或插件目录里假定某个开源许可证。
+- **MIT 许可**。本仓库及其全部插件以 MIT 许可证发布，见 [`LICENSE`](LICENSE)；插件目录随
+  仓库一同授权，不另设许可证文件。
 - **不发布 npm 包**。所有插件都通过 Git 提交 + 子目录安装，所以更新无需发版。
 - **私有仓库不可用**。索引和源码都由 GitHub 匿名提供，仓库设为私有后别人既取不到索引也装不了插件。
 - **索引只是声明**。安装后的 `name`、`version` 以插件自己的 `package.json` 为准；DSH 仍会做版本

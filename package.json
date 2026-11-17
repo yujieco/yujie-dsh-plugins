@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "description": "Central DeepSeek Harness plugin market: index.json plus the plugins it publishes.",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yujieco/yujie-dsh-plugins.git"

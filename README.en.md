@@ -65,6 +65,7 @@ You get the code as it stood when the index was built, not the tip of a branch; 
 ```text
 .
 ├── index.json                 # the format 1 market index (single source of truth)
+├── LICENSE                    # the MIT license
 ├── plugins/
 │   ├── cdp/                   # yujie-dsh-plugin-cdp
 │   └── sider-motion/          # yujie-dsh-plugin-sider-motion
@@ -135,9 +136,9 @@ a failure marks the commit and the pull request red.
 
 ## Boundaries and known limits
 
-- **No LICENSE file.** The repository ships without a license, so default copyright applies and
-  all rights are reserved. Do not assume an open-source license for this repository or its
-  plugin directories.
+- **MIT licensed.** The repository and every plugin in it ship under the MIT License; see
+  [`LICENSE`](LICENSE). A plugin directory carries no separate license file and is covered by
+  that root license.
 - **No npm packages.** Every plugin installs from a Git commit plus a subdirectory, so updates need
   no release.
 - **Private repositories do not work.** GitHub serves the index and the sources anonymously; a

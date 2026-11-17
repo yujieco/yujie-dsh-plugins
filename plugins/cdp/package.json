@@ -3,6 +3,7 @@
   "version": "0.2.1",
   "private": true,
   "description": "Drive Chrome or Edge over CDP: read pages as structured snapshots or text, click with a visible agent cursor, capture grid or sliced screenshots, watch a live right-sidebar view, and collect console errors.",
+  "license": "MIT",
   "type": "module",
   "main": "index.js",
   "exports": {
