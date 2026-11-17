@@ -69,6 +69,7 @@ function resolveConfig(config) {
     maxSnapshotNodes: Number(read('maxSnapshotNodes', 150)),
     maxConsoleLines: Number(read('maxConsoleLines', 50)),
     sharing: String(read('sharing', 'perSession')),
+    idleCloseMs: Number(read('idleCloseMs', 300000)),
   }
 }
 

@@ -56,6 +56,7 @@ export class BrowserHub {
       session = new BrowserSession(this, key, this.config)
       this.sessions.set(key, session)
     }
+    session.touch()
     return session
   }
 
@@ -110,6 +111,43 @@ export class BrowserSession {
     this.inflight = 0
     this.chain = Promise.resolve()
     this.closed = false
+    /** Pending idle countdown that closes this browser after `idleCloseMs`. */
+    this.idleTimer = undefined
+  }
+
+  /**
+   * Record a tool call and restart the idle countdown.
+   *
+   * Called on every tool that touches this browser, so an instance nobody is
+   * working with closes on its own instead of outliving the work that opened
+   * it. The panel never calls this: polling must not hold a browser open.
+   */
+  touch() {
+    this.#armIdle()
+  }
+
+  /**
+   * (Re)start or cancel the idle countdown.
+   *
+   * Only a browser this hub launched is armed: closing an instance attached
+   * with `attachPort` would terminate a browser the user started, which an
+   * idle countdown has no business doing. The timer is unref'd so a countdown
+   * never keeps the host process alive.
+   */
+  #armIdle() {
+    if (this.idleTimer !== undefined) {
+      clearTimeout(this.idleTimer)
+      this.idleTimer = undefined
+    }
+    const ms = Number(this.config.idleCloseMs ?? 0)
+    if (!Number.isFinite(ms) || ms <= 0 || this.connected === false) return
+    if (this.launched !== true) return
+    this.idleTimer = setTimeout(() => {
+      this.idleTimer = undefined
+      if (this.closed) return
+      this.close().catch(() => {})
+    }, ms)
+    if (typeof this.idleTimer.unref === 'function') this.idleTimer.unref()
   }
 
   /** Whether a live connection exists. */
@@ -158,6 +196,7 @@ export class BrowserSession {
     this.profileDir = launched.profileDir
     await this.connect(launched.port, launched.version)
     this.stderrTail = launched.stderrTail
+    this.#armIdle()
     return this
   }
 
@@ -444,6 +483,10 @@ export class BrowserSession {
   async close() {
     if (this.closed) return
     this.closed = true
+    if (this.idleTimer !== undefined) {
+      clearTimeout(this.idleTimer)
+      this.idleTimer = undefined
+    }
     const browserStop = this.stopBrowser
     this.stopBrowser = undefined
     // Ask the browser to exit itself first: this also covers a session whose

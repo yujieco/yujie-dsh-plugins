@@ -110,6 +110,11 @@ Every field has a default; set them on the row's `config` mapping in
 | `maxSnapshotNodes` | `150` | Default element cap for `browser_snapshot`. |
 | `maxConsoleLines` | `50` | Default entry cap for `browser_console`. |
 | `sharing` | `perSession` | `perSession` gives each agent its own browser; `shared` reuses one. |
+| `idleCloseMs` | `300000` | Close a browser with no tool call for this long. The panel's two-second polling never counts as activity. `0` keeps it open until `browser_close`. |
+
+With the default `idleCloseMs`, a browser closes itself five minutes after the last
+tool call, so an instance never outlives the work that opened it. Every tool resets
+the countdown; `browser_close` closes immediately.
 
 ## How it works
 
