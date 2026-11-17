@@ -100,7 +100,7 @@
           "source": {
             "type": "git",
             "url": "https://github.com/yujieco/yujie-dsh-plugins",
-            "commit": "f3f41378538365da049397b694e09a366dfe6581",
+            "commit": "40cfea8393987cf0c48d5387abeffd7b97ecb259",
             "path": "plugins/sider-motion"
           }
         }
@@ -140,12 +140,12 @@
       },
       "versions": [
         {
-          "version": "0.2.0",
-          "publishTimestamp": 1793806745,
+          "version": "0.2.1",
+          "publishTimestamp": 1794897833,
           "source": {
             "type": "git",
             "url": "https://github.com/yujieco/yujie-dsh-plugins",
-            "commit": "f3f41378538365da049397b694e09a366dfe6581",
+            "commit": "40cfea8393987cf0c48d5387abeffd7b97ecb259",
             "path": "plugins/cdp"
           }
         }
@@ -186,7 +186,7 @@
           "source": {
             "type": "git",
             "url": "https://github.com/yujieco/yujie-dsh-plugins",
-            "commit": "f3f41378538365da049397b694e09a366dfe6581",
+            "commit": "40cfea8393987cf0c48d5387abeffd7b97ecb259",
             "path": "plugins/system-prompt"
           }
         }
