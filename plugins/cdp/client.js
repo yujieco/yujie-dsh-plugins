@@ -17,7 +17,7 @@ window.__ModuleLoader__.load({
     const POLL_MS = 2000
 
     const zh = {
-      'tab.title': '浏览器',
+      'tab.title': '受控浏览器',
       'header.label': '查看受控浏览器',
       'status.connected': '{browser} 运行中',
       'status.idle': '没有浏览器会话',
@@ -38,7 +38,7 @@ window.__ModuleLoader__.load({
     }
 
     const en = {
-      'tab.title': 'Browser',
+      'tab.title': 'Controlled browser',
       'header.label': 'View the controlled browser',
       'status.connected': '{browser} running',
       'status.idle': 'No browser session',
@@ -261,7 +261,7 @@ window.__ModuleLoader__.load({
     }
 
     return {
-      inject: ['slots'],
+      inject: ['slots', 'locale', 'sidebarRightTabs', 'sidebarRight'],
       apply(ctx) {
         ctx.effect(() => ctx.locale.register(NS, { zh, en }), 'cdp: dictionaries')
 
