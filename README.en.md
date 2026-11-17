@@ -7,7 +7,7 @@
 </div>
 
 The central plugin market for DeepSeek Harness (DSH): [`index.json`](index.json) at the repository
-root is a format 1 plugin index, and [`plugins/`](plugins) holds the three plugin sources it
+root is a format 1 plugin index, and [`plugins/`](plugins) holds the two plugin sources it
 publishes. Add the index address in DSH to browse, install, and update every plugin from
 **Plugins → Discover** — no npm release needed.
 
@@ -48,7 +48,6 @@ https://raw.githubusercontent.com/yujieco/yujie-dsh-plugins/main/index.json
 | --- | --- | --- | --- |
 | `yujie-dsh-plugin-sider-motion` | 1.0.0 | Lists the ports the current Session is listening on in its right sidebar, one click opens each in the browser | [`plugins/sider-motion`](plugins/sider-motion) |
 | `yujie-dsh-plugin-cdp` | 0.2.1 | Drives Chrome/Edge over CDP: structural snapshots, text reads, grid and sliced screenshots, a visible agent cursor, a live right-sidebar view, and error collection | [`plugins/cdp`](plugins/cdp) |
-| `yujie-dsh-plugin-system-prompt` | 1.0.0 | Injects your own text at the start of every conversation's system prompt, editable from the plugin panel | [`plugins/system-prompt`](plugins/system-prompt) |
 
 Installation, configuration, and usage live in each directory's `README.md`. The CDP plugin's
 design trade-offs and measurements are in
@@ -68,16 +67,15 @@ You get the code as it stood when the index was built, not the tip of a branch; 
 ├── index.json                 # the format 1 market index (single source of truth)
 ├── plugins/
 │   ├── cdp/                   # yujie-dsh-plugin-cdp
-│   ├── sider-motion/          # yujie-dsh-plugin-sider-motion
-│   └── system-prompt/         # yujie-dsh-plugin-system-prompt
+│   └── sider-motion/          # yujie-dsh-plugin-sider-motion
 ├── scripts/
 │   ├── build-index.mjs        # builds index.json from plugins/<dir>/package.json
 │   └── validate-index.mjs     # validates index.json with DSH's own parser
 └── .github/workflows/validate-index.yml
 ```
 
-`node_modules/` and `.DS_Store` are ignored. `plugins/system-prompt` also carries a
-`pnpm-lock.yaml` that pins its single runtime dependency, `@deepseek-ai/schemastery`.
+`node_modules/` and `.DS_Store` are ignored. Each plugin commits only sources and
+manifests; dependencies are resolved at install time.
 
 ## Index format
 

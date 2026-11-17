@@ -7,7 +7,7 @@
 </div>
 
 给 DeepSeek Harness（DSH）用的中央插件市场：根目录的 [`index.json`](index.json) 是一份 format 1
-插件索引，[`plugins/`](plugins) 下是索引实际发布的三份插件源码。在 DSH 里加入索引地址，就能在
+插件索引，[`plugins/`](plugins) 下是索引实际发布的两份插件源码。在 DSH 里加入索引地址，就能在
 **插件 → 发现（Discover）** 中浏览、安装与更新全部插件，无需发布到 npm。
 
 [English](README.en.md) | 中文
@@ -43,7 +43,6 @@ https://raw.githubusercontent.com/yujieco/yujie-dsh-plugins/main/index.json
 | --- | --- | --- | --- |
 | `yujie-dsh-plugin-sider-motion` | 1.0.0 | 在会话右侧边栏列出本会话正在监听的端口，点击即在浏览器打开 | [`plugins/sider-motion`](plugins/sider-motion) |
 | `yujie-dsh-plugin-cdp` | 0.2.1 | 通过 CDP 驱动 Chrome/Edge：结构快照、文本读取、网格/分片截图、可见鼠标点击、右侧栏实时画面、异常采集 | [`plugins/cdp`](plugins/cdp) |
-| `yujie-dsh-plugin-system-prompt` | 1.0.0 | 在每次对话的系统提示词开头注入自定义内容，可在插件面板中编辑 | [`plugins/system-prompt`](plugins/system-prompt) |
 
 安装、配置与用法见各自目录下的 `README.md`。CDP 插件的设计取舍与实测记录见
 [`plugins/cdp/docs/FEASIBILITY.md`](plugins/cdp/docs/FEASIBILITY.md)。
@@ -61,16 +60,14 @@ https://raw.githubusercontent.com/yujieco/yujie-dsh-plugins/main/index.json
 ├── index.json                 # format 1 市场索引（唯一权威）
 ├── plugins/
 │   ├── cdp/                   # yujie-dsh-plugin-cdp
-│   ├── sider-motion/          # yujie-dsh-plugin-sider-motion
-│   └── system-prompt/         # yujie-dsh-plugin-system-prompt
+│   └── sider-motion/          # yujie-dsh-plugin-sider-motion
 ├── scripts/
 │   ├── build-index.mjs        # 由 plugins/<dir>/package.json 生成 index.json
 │   └── validate-index.mjs     # 用 DSH 同款解析器校验 index.json
 └── .github/workflows/validate-index.yml
 ```
 
-`node_modules/` 与 `.DS_Store` 已被忽略；`plugins/system-prompt` 另带一个 `pnpm-lock.yaml`，
-用于固定它唯一的运行时依赖 `@deepseek-ai/schemastery`。
+`node_modules/` 与 `.DS_Store` 已被忽略；每个插件只提交源码与清单，依赖在安装时解析。
 
 ## 索引格式
 

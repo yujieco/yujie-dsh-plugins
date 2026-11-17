@@ -42,14 +42,6 @@ const MARKET = {
     repository: { url: REPOSITORY, directory: 'plugins/cdp' },
     directory: 'plugins/cdp',
   },
-  'yujie-dsh-plugin-system-prompt': {
-    order: 3,
-    category: 'productivity',
-    labels: ['prompts'],
-    keywords: ['system-prompt', 'prompt', 'instructions', 'customization'],
-    repository: { url: REPOSITORY, directory: 'plugins/system-prompt' },
-    directory: 'plugins/system-prompt',
-  },
 }
 
 const INDEX = {
@@ -59,21 +51,19 @@ const INDEX = {
     zh: 'Yujie 的 DSH 插件',
   },
   description: {
-    en: 'A small, curated set of DeepSeek Harness plugins: session ports, CDP browser control, and a custom system prompt.',
-    zh: '由 yujie 维护的一组 DeepSeek Harness 插件：会话端口、CDP 浏览器操控、自定义系统提示词。',
+    en: 'A small, curated set of DeepSeek Harness plugins: session ports and CDP browser control.',
+    zh: '由 yujie 维护的一组 DeepSeek Harness 插件：会话端口与 CDP 浏览器操控。',
   },
   metadata: {
     categories: {
       'developer-tools': { title: { en: 'Developer tools', zh: '开发工具' } },
       automation: { title: { en: 'Automation', zh: '自动化' } },
-      productivity: { title: { en: 'Productivity', zh: '效率工具' } },
     },
     labels: {
       sidebar: { title: { en: 'Sidebar', zh: '侧边栏' } },
       ports: { title: { en: 'Ports', zh: '端口' } },
       browser: { title: { en: 'Browser', zh: '浏览器' } },
       automation: { title: { en: 'Automation', zh: '自动化' } },
-      prompts: { title: { en: 'Prompts', zh: '提示词' } },
     },
   },
   plugins: [],

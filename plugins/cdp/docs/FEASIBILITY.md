@@ -21,7 +21,7 @@
 
 | 事实 | 证据 | 影响 |
 |---|---|---|
-| 插件 = npm 包 + `dsh.bundle.patch`，`plugin_manager.install_bundle` 安装到 profile | `yujie-dsh-plugin-system-prompt` 现有实现、`references/host-plugin.md` | 交付形态确定：`DSH Plugins/yujie-dsh-plugins/plugins/cdp/` → 安装即生效 |
+| 插件 = npm 包 + `dsh.bundle.patch`，`plugin_manager.install_bundle` 安装到 profile | `yujie-dsh-plugin-sider-motion` 现有实现、`references/host-plugin.md` | 交付形态确定：`DSH Plugins/yujie-dsh-plugins/plugins/cdp/` → 安装即生效 |
 | Host 插件可注册任意模型工具 | `ctx.tools.register(defineTool({...}))`，`@deepseek-ai/dsh-tools` | 工具面完全开放，无需改 DSH 本体 |
 | 工具结果可携带图片，模型能"看见" | `attachments.saveImage()` → `{type:'image', attachment}` 内容块（`dsh-tool-fs` 的 `read_image` 同款链路） | 截图直接进对话，无需额外 UI |
 | 图片上限 | 20 MB / 8192 px / 64 MP（`dsh-attachment-local` 默认） | 1280×757 PNG 远低于上限，安全 |
