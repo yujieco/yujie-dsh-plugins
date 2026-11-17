@@ -1,156 +1,139 @@
-<div align="left">
+# Yujie's DSH Plugins
 
-# yujie-dsh-plugins
+Two small plugins for DeepSeek Harness. Once installed:
 
-[![validate index](https://github.com/yujieco/yujie-dsh-plugins/actions/workflows/validate-index.yml/badge.svg?branch=main)](https://github.com/yujieco/yujie-dsh-plugins/actions/workflows/validate-index.yml)
+- **Session Ports** — the pages and services a conversation starts, listed in the right sidebar. Click one and it opens.
+- **CDP Browser Control** — lets the assistant drive a real browser window: click, read, and take screenshots for you.
 
-</div>
-
-The central plugin market for DeepSeek Harness (DSH): [`index.json`](index.json) at the repository
-root is a format 1 plugin index, and [`plugins/`](plugins) holds the two plugin sources it
-publishes. Add the index address in DSH to browse, install, and update every plugin from
-**Plugins → Discover** — no npm release needed.
+No code to write, no commands to run.
 
 English | [中文](README.md)
 
 ---
 
-## Requirements
+## What this actually is
 
-- DeepSeek Harness `0.2.x`, desktop edition.
-- Network access to `github.com` and `raw.githubusercontent.com` — GitHub serves both the index and
-  the plugin sources.
-- Node.js 22 only for working on this repository (the version CI uses, see
-  `.github/workflows/validate-index.yml`).
+This is a **plugin market index**, not the software itself.
 
-## Quick start
+Paste its address into DSH and the two plugins below show up under **Plugins → Discover**, ready to install. After that they live inside DSH and you just keep talking to the assistant — no buttons or commands to remember.
 
-Index address:
+---
 
-```text
-https://raw.githubusercontent.com/yujieco/yujie-dsh-plugins/main/index.json
-```
+## 1. Session Ports
 
-1. Open **Plugins** in the left sidebar and switch to **Discover**.
-2. On first use pick **Add index source** from the empty state; afterwards open **Manage index
-   sources…** from the market menu in the top-right corner.
-3. Paste the address above and save.
-4. The plugins appear in the list; select one to inspect its version and origin (repository +
-   commit + directory), then press **Install**.
+> The page your assistant built, one click away.
 
-> The address must be the **final** one: DSH refuses HTTP redirects when reading an index.
-> `raw.githubusercontent.com` answers `200` directly. GitHub Pages is **not enabled**
-> (`yujieco.github.io/yujie-dsh-plugins` returns `404`), so do not use it as an address.
+### When it helps
 
-## Published plugins
+Ask the assistant to "build a page so I can see it", "start a local server", or "give me a preview", and it starts a local server in the background. That address used to exist only in a wall of scrolling log output, where you had to scroll up and find something like `http://localhost:5173`.
 
-| Plugin | Version | What it does | Directory |
-| --- | --- | --- | --- |
-| `yujie-dsh-plugin-sider-motion` | 1.0.0 | Lists the ports the current Session is listening on in its right sidebar, one click opens each in the browser | [`plugins/sider-motion`](plugins/sider-motion) |
-| `yujie-dsh-plugin-cdp` | 0.2.1 | Drives Chrome/Edge over CDP: structural snapshots, text reads, grid and sliced screenshots, a visible agent cursor, a live right-sidebar view, and error collection | [`plugins/cdp`](plugins/cdp) |
+With this plugin, the conversation's right sidebar lists:
 
-Installation, configuration, and usage live in each directory's `README.md`. The CDP plugin's
-design trade-offs and measurements are in
-[`plugins/cdp/docs/FEASIBILITY.md`](plugins/cdp/docs/FEASIBILITY.md).
+- the port number (5173, 8000, …)
+- the command that started it
+- a clickable address
 
-## What gets installed
+### How to use it
 
-Every version in the index pins a **Git commit**: DSH generates
-`git+https://github.com/yujieco/yujie-dsh-plugins.git#<commit>&path:/plugins/<dir>` for pnpm.
-You get the code as it stood when the index was built, not the tip of a branch; later changes on
-`main` do not affect a published version.
+1. Ask the assistant to start a service, as usual.
+2. A port icon appears on the right of the conversation header; a number next to it means that many services are running.
+3. Click it, the right sidebar opens **Ports**, click any row to open it in your browser.
 
-## Repository layout
+![The port list in the right sidebar](plugins/sider-motion/docs/screenshot-ports.png)
 
-```text
-.
-├── index.json                 # the format 1 market index (single source of truth)
-├── LICENSE                    # the MIT license
-├── plugins/
-│   ├── cdp/                   # yujie-dsh-plugin-cdp
-│   └── sider-motion/          # yujie-dsh-plugin-sider-motion
-├── scripts/
-│   ├── build-index.mjs        # builds index.json from plugins/<dir>/package.json
-│   └── validate-index.mjs     # validates index.json with DSH's own parser
-└── .github/workflows/validate-index.yml
-```
+A green dot means the port is **actually** listening — not merely mentioned in a log, and not a leftover from a service that already exited. When a service stops, the row disappears on the next refresh.
 
-`node_modules/` and `.DS_Store` are ignored. Each plugin commits only sources and
-manifests; dependencies are resolved at install time.
+The plugin only reads local port data and working directories. It does not use the network and does not touch your files.
 
-## Index format
+---
 
-`index.json` is the single source of truth, so this file does not reproduce it. The rules are
-implemented by `@deepseek-ai/dsh-plugin-market-index@0.2.1-rc.5`, which `npm run validate:index`
-calls. The constraints worth knowing before editing:
+## 2. CDP Browser Control
 
-- `format` must be `1`. Localized text is a string or `{ en, zh }` and **must include `en`**.
-- `name` must be a valid npm package name and unique within the index.
-- `versions` is non-empty; `version` is an exact SemVer; `publishTimestamp` is an integer of
-  **Unix seconds**.
-- `source.type` is `npm` or `git`. For `git`, `url` must be an https canonical repository URL,
-  `commit` is a **lowercase 40-character SHA**, and the optional `path` points at the package
-  subdirectory.
-- `icon` is either a URL relative to the index address or an inline `data:` value (SVG/PNG/JPEG/
-  WebP, ≤32 KiB decoded). This repository inlines icons to avoid extra requests.
-- Ids referenced by `metadata.categories` and `labels` must first be declared at index level.
+> A browser of the assistant's own.
 
-## Local development
+### When it helps
 
-```bash
-npm install --no-audit --no-fund
-npm run build:index      # rebuild index.json, pinning each source.commit to HEAD
-npm run validate:index   # check it against format 1
-```
+- "Check whether this page loads."
+- "Log in and fill in this form."
+- "What is the page complaining about? What does the console say?"
+- "Take a screenshot of this page for me."
 
-Both scripts run without network access (`npm install` aside).
+### What it does
 
-## Releasing a version
+The assistant opens a real Chrome or Edge window, and you can watch it work: the cursor moves onto an element first, then clicks.
 
-Order matters: the index must reference a commit that already exists, and the index is a commit
-itself.
+By default it reads the page **structure** — which buttons, inputs, and text exist and what they are called — and takes a screenshot only when it needs to look. So it aims at elements it recognises rather than guessing coordinates.
 
-```bash
-# 1) change plugin code and bump plugins/<dir>/package.json version
-git add plugins && git commit -m "feat(cdp): ..."
+![The assistant operating the browser](plugins/cdp/docs/screenshot-control.png)
 
-# 2) build the index from that HEAD
-npm run build:index
+### Two things worth knowing
 
-# 3) validate
-npm run validate:index
+- **It is its own browser.** It uses a separate profile directory and never touches the browser you normally use: your bookmarks, logins, and extensions are untouched, and it cannot borrow your logged-in sessions either.
+- **A banner at the top says the browser is being controlled.** That is the browser's own notice; ignore it. It goes away when the browser closes.
 
-# 4) commit the index
-git add index.json && git commit -m "chore: build market index"
-git push
-```
+---
 
-**Bumping the version is mandatory**: the market decides update availability from `version`, so a
-changed commit under the same version does not show as an update.
+## Install
 
-## Validation
+### Requirements
 
-CI runs in the workflow **validate index** on every `push` to `main` and every `pull_request`. On
-Ubuntu with Node.js 22 it runs `npm install --no-audit --no-fund` and `npm run validate:index`;
-a failure marks the commit and the pull request red.
+- DeepSeek Harness for desktop, `0.2.x`.
+- **Access to GitHub.** Both the index and the plugin code come from GitHub (`github.com` and `raw.githubusercontent.com`). On a network that cannot reach them, installation fails — there is no other distribution channel for this repository.
 
-## Boundaries and known limits
+### Steps
 
-- **MIT licensed.** The repository and every plugin in it ship under the MIT License; see
-  [`LICENSE`](LICENSE). A plugin directory carries no separate license file and is covered by
-  that root license.
-- **No npm packages.** Every plugin installs from a Git commit plus a subdirectory, so updates need
-  no release.
-- **Private repositories do not work.** GitHub serves the index and the sources anonymously; a
-  private repository means nobody can fetch either.
-- **The index is a claim.** After installation the plugin's own `package.json` governs `name` and
-  `version`, and DSH still performs its compatibility and trust checks.
-- **Third-party content is not instruction.** Index descriptions, READMEs, and plugin code come
-  from the repository author; verify the origin before installing.
-- Inlined icons make `index.json` larger than plain text (roughly 1 KB per icon).
-- Small files at the repository root (this README, `scripts/`) are not published with a plugin;
-  only `plugins/<dir>` is installed.
+1. Open DSH and click **Plugins** in the left rail.
+2. Switch to **Discover**. On first use you will see an empty state — click **Add index source**. If you added one before, open **Manage index sources…** from the menu at the top right.
+3. Paste this address and save:
 
-## Maintainer
+   ```text
+   https://raw.githubusercontent.com/yujieco/yujie-dsh-plugins/main/index.json
+   ```
 
-[yujieco](https://github.com/yujieco). Please open plugin issues in this repository.
+4. **Session Ports** and **CDP Browser Control** appear in the list. Select one and click **Install**.
+
+The two plugins are independent: install either or both.
+
+### Restart DSH once after installing
+
+Part of a plugin loads when the interface starts, so its buttons do not appear right away. **Quit DSH completely and open it again** — then they will.
+
+---
+
+## Troubleshooting
+
+**Installed, but I cannot find it in the interface.**
+
+Restart DSH: quit it fully and reopen, not just close the window.
+
+**The ports panel is empty.**
+
+A service has to be running. If the assistant started it as a foreground task, the port is gone once that task ends. Ask it to run the service in the background, or confirm the service is still alive.
+
+**Clicking a port does not open.**
+
+Addresses are always `http://localhost:PORT`. A few services listen on IPv6 only, and some have already exited — both fail to open.
+
+**The assistant has a browser open and I want to use the mouse myself.**
+
+You can operate that window directly. The assistant is still in control, though, so tell it to "close the browser" first.
+
+**Will it touch my own browser data?**
+
+No. It uses a separate profile directory.
+
+**How do I remove it?**
+
+**Plugins → Installed**, find the plugin, and switch it off or uninstall it. Disabling removes the button and the panel together and does not affect anything you are working on.
+
+**A new version was released — what do I do?**
+
+Open **Plugins → Discover**, select the plugin; when an update is available an update button appears. Click it, then restart DSH again.
+
+---
+
+## About
+
+Maintained by [yujieco](https://github.com/yujieco). Please open plugin issues in [Issues](https://github.com/yujieco/yujie-dsh-plugins/issues).
+
+Released under the [MIT License](LICENSE).

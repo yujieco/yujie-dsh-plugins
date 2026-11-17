@@ -1,140 +1,139 @@
-<div align="left">
+# Yujie 的 DSH 插件
 
-# yujie-dsh-plugins
+两个给 DeepSeek Harness 用的小插件。装上之后：
 
-[![validate index](https://github.com/yujieco/yujie-dsh-plugins/actions/workflows/validate-index.yml/badge.svg?branch=main)](https://github.com/yujieco/yujie-dsh-plugins/actions/workflows/validate-index.yml)
+- **会话端口** —— 会话里跑起来的网页或服务，右侧栏列出来，点一下就打开。
+- **CDP 浏览器操控** —— 让助手真的开一个浏览器窗口，自己点、自己读、自己截图给你看。
 
-</div>
-
-给 DeepSeek Harness（DSH）用的中央插件市场：根目录的 [`index.json`](index.json) 是一份 format 1
-插件索引，[`plugins/`](plugins) 下是索引实际发布的两份插件源码。在 DSH 里加入索引地址，就能在
-**插件 → 发现（Discover）** 中浏览、安装与更新全部插件，无需发布到 npm。
+不用写代码，也不用敲命令。
 
 [English](README.en.md) | 中文
 
 ---
 
-## 前置条件
+## 先说清楚这是什么
 
-- DeepSeek Harness `0.2.x` 桌面版。
-- 能访问 `github.com` 与 `raw.githubusercontent.com`——索引和插件源码都由 GitHub 提供。
-- 只有开发本仓库时才需要 Node.js 22（CI 使用的版本，见 `.github/workflows/validate-index.yml`）。
+这是一份**插件市场索引**，不是软件本体。
 
-## 快速开始
+你在 DSH 里把它的地址填进去，`插件 → 发现` 里就会出现下面这两个插件，点「安装」就行。装完之后它们常驻在 DSH 里，你照常跟助手说话即可——不需要记住任何按钮或命令。
 
-索引地址：
+---
 
-```text
-https://raw.githubusercontent.com/yujieco/yujie-dsh-plugins/main/index.json
-```
+## 一、会话端口
 
-1. 打开左侧 **插件（Plugins）** 页面，切到 **发现（Discover）**。
-2. 首次使用点空状态里的 **添加索引源**；已有索引源时，从右上角市场菜单进入 **管理索引源…**。
-3. 粘贴上面的地址并保存。
-4. 列表里出现本仓库的插件后，选中条目可查看版本、来源（仓库 + 提交 + 目录），点 **安装**。
+> 助手做出来的页面，一点就开。
 
-> 索引地址必须是**最终地址**：DSH 读取索引时拒绝 HTTP 重定向。`raw.githubusercontent.com`
-> 直接返回 `200`，可以放心使用。GitHub Pages 目前**未启用**（`yujieco.github.io/yujie-dsh-plugins`
-> 返回 `404`），不要把它当作可用地址。
+### 什么时候用得上
 
-## 收录的插件
+你让助手「做个页面看看」「起个本地服务」「给我个预览」，它会在后台启动一个本地服务器。以前这个地址只出现在飞速滚动的日志里，你得往上翻着找 `http://localhost:5173` 这样的字。
 
-| 插件 | 版本 | 作用 | 目录 |
-| --- | --- | --- | --- |
-| `yujie-dsh-plugin-sider-motion` | 1.0.0 | 在会话右侧边栏列出本会话正在监听的端口，点击即在浏览器打开 | [`plugins/sider-motion`](plugins/sider-motion) |
-| `yujie-dsh-plugin-cdp` | 0.2.1 | 通过 CDP 驱动 Chrome/Edge：结构快照、文本读取、网格/分片截图、可见鼠标点击、右侧栏实时画面、异常采集 | [`plugins/cdp`](plugins/cdp) |
+装上这个之后，会话右侧栏会直接列出：
 
-安装、配置与用法见各自目录下的 `README.md`。CDP 插件的设计取舍与实测记录见
-[`plugins/cdp/docs/FEASIBILITY.md`](plugins/cdp/docs/FEASIBILITY.md)。
+- 端口号（5173、8000……）
+- 启动它的命令
+- 一个能点的地址
 
-## 安装到的到底是什么
+### 怎么用
 
-索引里的每个版本都把 **Git 提交**写死：DSH 生成
-`git+https://github.com/yujieco/yujie-dsh-plugins.git#<commit>&path:/plugins/<dir>` 交给 pnpm 安装。
-所以你拿到的是索引发布那一刻的代码，而不是分支的最新状态。`main` 分支之后的变化不会影响已发布的版本。
+1. 像平常一样让助手起服务。
+2. 会话标题栏右侧会多出一个端口图标，旁边有数字就表示当前有几个服务在跑。
+3. 点它，右侧栏展开「端口」，点任意一行就在浏览器里打开。
 
-## 仓库结构
+![右侧栏里的端口列表](plugins/sider-motion/docs/screenshot-ports.png)
 
-```text
-.
-├── index.json                 # format 1 市场索引（唯一权威）
-├── LICENSE                    # MIT 许可证
-├── plugins/
-│   ├── cdp/                   # yujie-dsh-plugin-cdp
-│   └── sider-motion/          # yujie-dsh-plugin-sider-motion
-├── scripts/
-│   ├── build-index.mjs        # 由 plugins/<dir>/package.json 生成 index.json
-│   └── validate-index.mjs     # 用 DSH 同款解析器校验 index.json
-└── .github/workflows/validate-index.yml
-```
+绿点表示端口**真的**在监听——不是日志里提到过、也不是早就退出的残留。服务停掉后，下一次刷新就自己消失了。
 
-`node_modules/` 与 `.DS_Store` 已被忽略；每个插件只提交源码与清单，依赖在安装时解析。
+它只读取本机的端口列表和工作目录，不联网，也不改你的文件。
 
-## 索引格式
+---
 
-`index.json` 本身是唯一权威，本文件不复制它的全文。规则由
-`@deepseek-ai/dsh-plugin-market-index@0.2.1-rc.5` 实现，`npm run validate:index` 即调用它。
-改动索引时值得先记住这几条：
+## 二、CDP 浏览器操控
 
-- `format` 必须是 `1`。本地化文本是字符串或 `{ en, zh }`，且**必须含 `en`**。
-- `name` 必须是合法 npm 包名，同一索引内不可重复。
-- `versions` 非空；`version` 是精确 SemVer；`publishTimestamp` 是 **Unix 秒**整数。
-- `source.type` 只有 `npm` 和 `git`。`git` 的 `url` 必须是 https 规范仓库地址，`commit` 是
-  **小写 40 位 SHA**，`path` 可选、指向仓库内的包子目录。
-- `icon` 可以是相对索引地址的 URL，或内联 `data:`（SVG/PNG/JPEG/WebP，解码后 ≤32 KiB）。
-  本仓库把图标内联，避免额外请求。
-- `metadata.categories` / `labels` 中被引用的 id 必须先在索引级声明。
+> 给助手一个自己的浏览器。
 
-## 本地开发
+### 什么时候用得上
 
-```bash
-npm install --no-audit --no-fund
-npm run build:index      # 重建 index.json，把每个 source.commit 钉到当前 HEAD
-npm run validate:index   # 按 format 1 校验
-```
+- 「帮我看看这个网页能不能打开」
+- 「登录进去，把这个表单填了」
+- 「页面上哪里报错了，控制台说了什么」
+- 「把这个页面截个图给我」
 
-两个脚本都不访问网络（`npm install` 除外）。
+### 它会怎么做
 
-## 发布一个版本
+助手会打开一个真实的 Chrome 或 Edge 窗口，而且你能看着它操作：鼠标先移动到一个元素上，再点下去。
 
-顺序不能乱，因为索引要引用一个**已经存在**的提交，而索引本身也要被提交：
+它默认读的是页面的「结构」——有哪些按钮、输入框、文字，各自叫什么——需要看图时才截图。所以它通常是认准元素再点，不是靠猜坐标。
 
-```bash
-# 1) 改动插件代码，并递增 plugins/<dir>/package.json 的 version
-git add plugins && git commit -m "feat(cdp): ..."
+![助手正在操作浏览器](plugins/cdp/docs/screenshot-control.png)
 
-# 2) 用刚刚的 HEAD 生成索引
-npm run build:index
+### 两点要留意
 
-# 3) 校验
-npm run validate:index
+- **这是它自己的浏览器。** 用的是独立配置目录，不碰你平时用的那个浏览器：你的书签、登录状态、扩展都不受影响；反过来，它也用不上你的登录状态。
+- **窗口顶上有一条「正在控制」的横幅。** 那是浏览器自己的提示，不用管，关掉浏览器就结束了。
 
-# 4) 提交索引
-git add index.json && git commit -m "chore: build market index"
-git push
-```
+---
 
-**必须递增版本号**：市场按 `version` 判断更新（`update-available`），同一个版本号换了 commit
-不会显示为可更新。
+## 安装
 
-## 校验
+### 前提
 
-CI 在工作流 **validate index** 中运行，触发条件是 `push` 到 `main` 与任意 `pull_request`，
-在 Ubuntu + Node.js 22 上执行 `npm install --no-audit --no-fund` 与 `npm run validate:index`。
-校验失败时 GitHub 会在提交与 PR 上标红。
+- DeepSeek Harness 桌面版 `0.2.x`。
+- **能访问 GitHub**。索引和插件代码都由 GitHub 提供（`github.com` 与 `raw.githubusercontent.com`）。公司网络或部分网络环境访问不了的话，安装会失败——这一点绕不过去，因为这个仓库没有别的分发渠道。
 
-## 边界与已知限制
+### 步骤
 
-- **MIT 许可**。本仓库及其全部插件以 MIT 许可证发布，见 [`LICENSE`](LICENSE)；插件目录随
-  仓库一同授权，不另设许可证文件。
-- **不发布 npm 包**。所有插件都通过 Git 提交 + 子目录安装，所以更新无需发版。
-- **私有仓库不可用**。索引和源码都由 GitHub 匿名提供，仓库设为私有后别人既取不到索引也装不了插件。
-- **索引只是声明**。安装后的 `name`、`version` 以插件自己的 `package.json` 为准；DSH 仍会做版本
-  兼容与信任确认。
-- **第三方内容不是指令**。索引里的描述、README 与插件代码都来自仓库作者，安装前请自行确认来源。
-- 图标内联会让 `index.json` 比纯文本大一些（每个图标约 1 KB 内）。
-- 仓库根目录的小文件（如本 README、`scripts/`）不随插件发布；只有 `plugins/<dir>` 会被安装。
+1. 打开 DSH，点左侧 **插件**。
+2. 切到 **发现**。第一次用会看到空状态，点 **添加索引源**；之前加过的话，从右上角菜单进 **管理索引源**。
+3. 粘贴下面这个地址，保存：
 
-## 维护者
+   ```text
+   https://raw.githubusercontent.com/yujieco/yujie-dsh-plugins/main/index.json
+   ```
 
-[yujieco](https://github.com/yujieco)。插件问题请开在本仓库的 Issues。
+4. 列表里出现「会话端口」和「CDP 浏览器操控」，选中一个点 **安装**。
+
+两个插件各自独立，装一个或都装都可以。
+
+### 装完要重启一次 DSH
+
+插件有一部分代码在界面启动时加载，所以刚装完按钮不会立刻出现。**完全退出 DSH 再打开**，就有了。
+
+---
+
+## 常见问题
+
+**装了，但界面上找不到。**
+
+重启 DSH——完全退出再打开，不是收起窗口。
+
+**端口面板是空的。**
+
+服务真在跑才显示。如果助手是在前台任务里跑的，任务一结束端口也就没了。让它用后台任务跑，或者先确认服务还活着。
+
+**点了端口打不开。**
+
+地址统一是 `http://localhost:端口`。少数服务只监听 IPv6，或者已经退出了，就会打不开。
+
+**助手开着浏览器，我想自己用鼠标点。**
+
+那个窗口你现在就能直接操作。不过助手还在控制它，建议先跟它说一句「关掉浏览器」。
+
+**会不会动到我自己的浏览器数据？**
+
+不会。插件用的是独立配置目录。
+
+**不想要了怎么卸载？**
+
+`插件 → 已安装`，找到对应插件，用开关停用，或者卸载。停用后按钮和面板一起消失，不影响你正在做的事。
+
+**插件出更新了，我要做什么？**
+
+`插件 → 发现` 里选中插件，有新版时会出现更新按钮，点一下即可，更新完同样重启一次 DSH。
+
+---
+
+## 关于
+
+维护者 [yujieco](https://github.com/yujieco)。插件问题请开在 [Issues](https://github.com/yujieco/yujie-dsh-plugins/issues)。
+
+本项目以 [MIT 许可证](LICENSE) 发布。
