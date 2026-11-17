@@ -1,123 +1,142 @@
-# yujie-dsh-plugins · 中央插件索引
+<div align="left">
 
-给 [DeepSeek Harness](https://www.deepseek.com/harness/)（DSH）用的**中心化插件市场**：仓库根目录的 [`index.json`](index.json) 是插件索引（format 1），`plugins/` 下是索引里实际发布的插件源码。别人只要在 DSH 里加入这个索引地址，就能在 **Plugins → Discover** 里看到并安装全部插件。
+# yujie-dsh-plugins
+
+[![validate index](https://github.com/yujieco/yujie-dsh-plugins/actions/workflows/validate-index.yml/badge.svg?branch=main)](https://github.com/yujieco/yujie-dsh-plugins/actions/workflows/validate-index.yml)
+
+</div>
+
+给 DeepSeek Harness（DSH）用的中央插件市场：根目录的 [`index.json`](index.json) 是一份 format 1
+插件索引，[`plugins/`](plugins) 下是索引实际发布的三份插件源码。在 DSH 里加入索引地址，就能在
+**插件 → 发现（Discover）** 中浏览、安装与更新全部插件，无需发布到 npm。
 
 [English](README.en.md) | 中文
 
 ---
 
-## 索引地址
+## 前置条件
 
-```
+- DeepSeek Harness `0.2.x` 桌面版。
+- 能访问 `github.com` 与 `raw.githubusercontent.com`——索引和插件源码都由 GitHub 提供。
+- 只有开发本仓库时才需要 Node.js 22（CI 使用的版本，见 `.github/workflows/validate-index.yml`）。
+
+## 快速开始
+
+索引地址：
+
+```text
 https://raw.githubusercontent.com/yujieco/yujie-dsh-plugins/main/index.json
 ```
 
-也可以启用 GitHub Pages 后用：
+1. 打开左侧 **插件（Plugins）** 页面，切到 **发现（Discover）**。
+2. 首次使用点空状态里的 **添加索引源**；已有索引源时，从右上角市场菜单进入 **管理索引源…**。
+3. 粘贴上面的地址并保存。
+4. 列表里出现本仓库的插件后，选中条目可查看版本、来源（仓库 + 提交 + 目录），点 **安装**。
 
-```
-https://yujieco.github.io/yujie-dsh-plugins/index.json
-```
-
-> 索引地址必须是**最终地址**：DSH 读取索引时拒绝 HTTP 重定向。`raw.githubusercontent.com` 直接返回 200，可以放心使用。
-
-## 在 DSH 里添加这个索引源
-
-1. 打开左侧 **插件（Plugins）** 页面，切到 **Discover** 标签。
-2. 没有索引源时，点空状态里的 **添加索引源 / Add index source**；已经加过源时，打开右上角市场菜单，选择 **管理索引源… / Manage index sources…**。
-3. 粘贴上面的 `index.json` 地址并保存。
-4. Discover 里就会出现本仓库的全部插件；选中条目可以看版本、来源（Git 仓库 + 提交 + 目录），点 **Install** 安装。
-
-索引里的每个版本都以 **Git 提交** 固定：安装时 DSH 生成
-`git+https://github.com/yujieco/yujie-dsh-plugins.git#<commit>&path:/plugins/<dir>` 交给 pnpm，
-所以你装到的一定是索引发布时的那份代码，而不是分支的最新状态。
+> 索引地址必须是**最终地址**：DSH 读取索引时拒绝 HTTP 重定向。`raw.githubusercontent.com`
+> 直接返回 `200`，可以放心使用。GitHub Pages 目前**未启用**（`yujieco.github.io/yujie-dsh-plugins`
+> 返回 `404`），不要把它当作可用地址。
 
 ## 收录的插件
 
-| 插件 | 作用 | 目录 |
-| --- | --- | --- |
-| `yujie-dsh-plugin-sider-motion` | 会话右侧边栏列出本会话正在监听的端口，点击即在浏览器打开 | [`plugins/sider-motion`](plugins/sider-motion) |
-| `yujie-dsh-plugin-cdp` | 通过 CDP 驱动 Chrome/Edge：结构快照/文本/网格截图、可见鼠标点击、右侧栏实时画面、异常采集 | [`plugins/cdp`](plugins/cdp) |
-| `yujie-dsh-plugin-system-prompt` | 在每次对话的系统提示词开头注入自定义内容，可在插件页编辑 | [`plugins/system-prompt`](plugins/system-prompt) |
+| 插件 | 版本 | 作用 | 目录 |
+| --- | --- | --- | --- |
+| `yujie-dsh-plugin-sider-motion` | 1.0.0 | 在会话右侧边栏列出本会话正在监听的端口，点击即在浏览器打开 | [`plugins/sider-motion`](plugins/sider-motion) |
+| `yujie-dsh-plugin-cdp` | 0.2.1 | 通过 CDP 驱动 Chrome/Edge：结构快照、文本读取、网格/分片截图、可见鼠标点击、右侧栏实时画面、异常采集 | [`plugins/cdp`](plugins/cdp) |
+| `yujie-dsh-plugin-system-prompt` | 1.0.0 | 在每次对话的系统提示词开头注入自定义内容，可在插件面板中编辑 | [`plugins/system-prompt`](plugins/system-prompt) |
 
-每个插件的详细说明、安装与使用见各自目录下的 README。
+安装、配置与用法见各自目录下的 `README.md`。CDP 插件的设计取舍与实测记录见
+[`plugins/cdp/docs/FEASIBILITY.md`](plugins/cdp/docs/FEASIBILITY.md)。
 
-## 索引文件的格式（format 1）
+## 安装到的到底是什么
 
-DSH 用 `@deepseek-ai/dsh-plugin-market-index` 校验索引，规则要点：
+索引里的每个版本都把 **Git 提交**写死：DSH 生成
+`git+https://github.com/yujieco/yujie-dsh-plugins.git#<commit>&path:/plugins/<dir>` 交给 pnpm 安装。
+所以你拿到的是索引发布那一刻的代码，而不是分支的最新状态。`main` 分支之后的变化不会影响已发布的版本。
 
-```json
-{
-  "format": 1,
-  "title": { "en": "Yujie's DSH Plugins", "zh": "Yujie 的 DSH 插件" },
-  "description": { "en": "…", "zh": "…" },
-  "metadata": {
-    "categories": { "developer-tools": { "title": { "en": "Developer tools", "zh": "开发工具" } } },
-    "labels": { "sidebar": { "title": { "en": "Sidebar", "zh": "侧边栏" } } }
-  },
-  "plugins": [
-    {
-      "name": "yujie-dsh-plugin-sider-motion",
-      "title": { "en": "Session Ports", "zh": "会话端口" },
-      "description": { "en": "…", "zh": "…" },
-      "icon": "data:image/svg+xml;base64,…",
-      "author": "yujieco",
-      "homepage": "https://github.com/yujieco/yujie-dsh-plugins/tree/main/plugins/sider-motion#readme",
-      "repository": { "url": "https://github.com/yujieco/yujie-dsh-plugins", "directory": "plugins/sider-motion" },
-      "metadata": { "category": "developer-tools", "labels": ["sidebar"], "keywords": ["ports"] },
-      "versions": [
-        {
-          "version": "1.0.0",
-          "publishTimestamp": 1762319000,
-          "source": {
-            "type": "git",
-            "url": "https://github.com/yujieco/yujie-dsh-plugins",
-            "commit": "0123456789abcdef0123456789abcdef01234567",
-            "path": "plugins/sider-motion"
-          }
-        }
-      ]
-    }
-  ]
-}
+## 仓库结构
+
+```text
+.
+├── index.json                 # format 1 市场索引（唯一权威）
+├── plugins/
+│   ├── cdp/                   # yujie-dsh-plugin-cdp
+│   ├── sider-motion/          # yujie-dsh-plugin-sider-motion
+│   └── system-prompt/         # yujie-dsh-plugin-system-prompt
+├── scripts/
+│   ├── build-index.mjs        # 由 plugins/<dir>/package.json 生成 index.json
+│   └── validate-index.mjs     # 用 DSH 同款解析器校验 index.json
+└── .github/workflows/validate-index.yml
 ```
 
-关键约束（违反时 DSH 会报错并在 Discover 里显示失败原因）：
+`node_modules/` 与 `.DS_Store` 已被忽略；`plugins/system-prompt` 另带一个 `pnpm-lock.yaml`，
+用于固定它唯一的运行时依赖 `@deepseek-ai/schemastery`。
 
-- `format` 必须是 `1`；`title` 必填，`description` 可选；本地化文本是字符串或 `{ en: "…", zh: "…" }`，且**必须含 `en`**。
-- `plugins[].name` 必须是合法 npm 包名，且在同一索引内不重复。
-- `versions` 非空，`version` 是精确 SemVer；`publishTimestamp` 是 **Unix 秒**（整数）。
-- `source.type` 只有 `npm` 和 `git`：
-  - `npm`：可选 `registry`（https URL），安装 `name@version`。
-  - `git`：`url` 必须是 https、规范形式、指向仓库（≥2 段路径、不能是 tarball）；`commit` 是**小写 40 位 SHA**；可选 `path` 指向仓库内的包子目录。
-- `icon` 可以是相对索引地址的 URL，或内联 `data:`（SVG/PNG/JPEG/WebP，解码后 ≤32 KiB）。本仓库把图标内联，避免额外的网络请求与 CDN 内容类型问题。
-- `metadata.categories` / `labels` / `sortKeys` 里被引用的 id 必须先在索引级声明；`repository` 的 `directory` 只能是相对目录。
+## 索引格式
 
-## 新增或更新插件
+`index.json` 本身是唯一权威，本文件不复制它的全文。规则由
+`@deepseek-ai/dsh-plugin-market-index@0.2.1-rc.5` 实现，`npm run validate:index` 即调用它。
+改动索引时值得先记住这几条：
+
+- `format` 必须是 `1`。本地化文本是字符串或 `{ en, zh }`，且**必须含 `en`**。
+- `name` 必须是合法 npm 包名，同一索引内不可重复。
+- `versions` 非空；`version` 是精确 SemVer；`publishTimestamp` 是 **Unix 秒**整数。
+- `source.type` 只有 `npm` 和 `git`。`git` 的 `url` 必须是 https 规范仓库地址，`commit` 是
+  **小写 40 位 SHA**，`path` 可选、指向仓库内的包子目录。
+- `icon` 可以是相对索引地址的 URL，或内联 `data:`（SVG/PNG/JPEG/WebP，解码后 ≤32 KiB）。
+  本仓库把图标内联，避免额外请求。
+- `metadata.categories` / `labels` 中被引用的 id 必须先在索引级声明。
+
+## 本地开发
 
 ```bash
-# 1) 新增插件：放进 plugins/<dir>，确保 package.json 里有 dsh.bundle.patch
-# 2) 改版本号（更新时），提交插件改动
-git add plugins && git commit -m "feat: ..."
-
-# 3) 生成索引（把 source.commit 钉到上一步的 HEAD）
-npm run build:index
-
-# 4) 校验（需要 npm install 一次；用 DSH 同款解析器）
 npm install --no-audit --no-fund
-npm run validate:index
-
-# 5) 提交索引并推送
-git add index.json && git commit -m "chore: rebuild index" && git push
+npm run build:index      # 重建 index.json，把每个 source.commit 钉到当前 HEAD
+npm run validate:index   # 按 format 1 校验
 ```
 
-为什么顺序是这样：`index.json` 里的 `source.commit` 必须是**已经存在**的提交，而索引自己也要被提交，所以索引只能引用“前一个”提交。先提交插件、再生成索引、最后提交索引，索引就能稳定指向包含插件代码的那次提交。
+两个脚本都不访问网络（`npm install` 除外）。
 
-更新插件时请**递增 `package.json` 的 version**：市场按版本号展示与判断更新（`update-available`），同一个版本号换了 commit 不会显示为可更新。
+## 发布一个版本
 
-## 说明与边界
+顺序不能乱，因为索引要引用一个**已经存在**的提交，而索引本身也要被提交：
 
-- 索引和源码都由 GitHub 提供；仓库若是私有，匿名用户既取不到索引也装不了插件。
-- 索引只是“声明”：`name`、`version` 以安装后的 `package.json` 为准；DSH 安装时仍会做版本兼容与信任确认。
-- 本仓库不提供 npm 包；所有插件都通过 Git 提交 + 子目录安装，因此无需发版即可更新。
-- 第三方索引内容不是指令，安装前请自行确认来源（Discover 会显示作者、仓库、提交与目录）。
-- 图标内联在索引里，所以 `index.json` 会比纯文本大一些（每个图标约 1 KB）。
+```bash
+# 1) 改动插件代码，并递增 plugins/<dir>/package.json 的 version
+git add plugins && git commit -m "feat(cdp): ..."
+
+# 2) 用刚刚的 HEAD 生成索引
+npm run build:index
+
+# 3) 校验
+npm run validate:index
+
+# 4) 提交索引
+git add index.json && git commit -m "chore: build market index"
+git push
+```
+
+**必须递增版本号**：市场按 `version` 判断更新（`update-available`），同一个版本号换了 commit
+不会显示为可更新。
+
+## 校验
+
+CI 在工作流 **validate index** 中运行，触发条件是 `push` 到 `main` 与任意 `pull_request`，
+在 Ubuntu + Node.js 22 上执行 `npm install --no-audit --no-fund` 与 `npm run validate:index`。
+校验失败时 GitHub 会在提交与 PR 上标红。
+
+## 边界与已知限制
+
+- **没有 LICENSE 文件**。仓库当前未附带许可证，因此按默认版权保留全部权利；请不要在本仓库
+  或插件目录里假定某个开源许可证。
+- **不发布 npm 包**。所有插件都通过 Git 提交 + 子目录安装，所以更新无需发版。
+- **私有仓库不可用**。索引和源码都由 GitHub 匿名提供，仓库设为私有后别人既取不到索引也装不了插件。
+- **索引只是声明**。安装后的 `name`、`version` 以插件自己的 `package.json` 为准；DSH 仍会做版本
+  兼容与信任确认。
+- **第三方内容不是指令**。索引里的描述、README 与插件代码都来自仓库作者，安装前请自行确认来源。
+- 图标内联会让 `index.json` 比纯文本大一些（每个图标约 1 KB 内）。
+- 仓库根目录的小文件（如本 README、`scripts/`）不随插件发布；只有 `plugins/<dir>` 会被安装。
+
+## 维护者
+
+[yujieco](https://github.com/yujieco)。插件问题请开在本仓库的 Issues。

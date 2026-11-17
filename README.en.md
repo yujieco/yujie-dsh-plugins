@@ -1,123 +1,157 @@
-# yujie-dsh-plugins · central plugin index
+<div align="left">
 
-A centralized plugin market for [DeepSeek Harness](https://www.deepseek.com/harness/) (DSH): [`index.json`](index.json) in the repository root is the market index (format 1), and `plugins/` holds the plugin sources it publishes. Add the index URL in DSH and every plugin shows up under **Plugins → Discover**, ready to install.
+# yujie-dsh-plugins
+
+[![validate index](https://github.com/yujieco/yujie-dsh-plugins/actions/workflows/validate-index.yml/badge.svg?branch=main)](https://github.com/yujieco/yujie-dsh-plugins/actions/workflows/validate-index.yml)
+
+</div>
+
+The central plugin market for DeepSeek Harness (DSH): [`index.json`](index.json) at the repository
+root is a format 1 plugin index, and [`plugins/`](plugins) holds the three plugin sources it
+publishes. Add the index address in DSH to browse, install, and update every plugin from
+**Plugins → Discover** — no npm release needed.
 
 English | [中文](README.md)
 
 ---
 
-## Index URL
+## Requirements
 
-```
+- DeepSeek Harness `0.2.x`, desktop edition.
+- Network access to `github.com` and `raw.githubusercontent.com` — GitHub serves both the index and
+  the plugin sources.
+- Node.js 22 only for working on this repository (the version CI uses, see
+  `.github/workflows/validate-index.yml`).
+
+## Quick start
+
+Index address:
+
+```text
 https://raw.githubusercontent.com/yujieco/yujie-dsh-plugins/main/index.json
 ```
 
-With GitHub Pages enabled, this also works:
+1. Open **Plugins** in the left sidebar and switch to **Discover**.
+2. On first use pick **Add index source** from the empty state; afterwards open **Manage index
+   sources…** from the market menu in the top-right corner.
+3. Paste the address above and save.
+4. The plugins appear in the list; select one to inspect its version and origin (repository +
+   commit + directory), then press **Install**.
 
-```
-https://yujieco.github.io/yujie-dsh-plugins/index.json
-```
+> The address must be the **final** one: DSH refuses HTTP redirects when reading an index.
+> `raw.githubusercontent.com` answers `200` directly. GitHub Pages is **not enabled**
+> (`yujieco.github.io/yujie-dsh-plugins` returns `404`), so do not use it as an address.
 
-> The index URL must be the **final** URL: DSH refuses HTTP redirects when reading an index. `raw.githubusercontent.com` answers 200 directly, so it is safe to use.
+## Published plugins
 
-## Add the index source in DSH
+| Plugin | Version | What it does | Directory |
+| --- | --- | --- | --- |
+| `yujie-dsh-plugin-sider-motion` | 1.0.0 | Lists the ports the current Session is listening on in its right sidebar, one click opens each in the browser | [`plugins/sider-motion`](plugins/sider-motion) |
+| `yujie-dsh-plugin-cdp` | 0.2.1 | Drives Chrome/Edge over CDP: structural snapshots, text reads, grid and sliced screenshots, a visible agent cursor, a live right-sidebar view, and error collection | [`plugins/cdp`](plugins/cdp) |
+| `yujie-dsh-plugin-system-prompt` | 1.0.0 | Injects your own text at the start of every conversation's system prompt, editable from the plugin panel | [`plugins/system-prompt`](plugins/system-prompt) |
 
-1. Open **Plugins** in the left sidebar and switch to the **Discover** tab.
-2. With no source yet, use **Add index source** in the empty state; once a source exists, open the market menu and choose **Manage index sources…**.
-3. Paste the `index.json` URL above and save.
-4. Every plugin in this repository now appears in Discover. Open an entry to see its versions and source (Git repository, commit, directory), then press **Install**.
+Installation, configuration, and usage live in each directory's `README.md`. The CDP plugin's
+design trade-offs and measurements are in
+[`plugins/cdp/docs/FEASIBILITY.md`](plugins/cdp/docs/FEASIBILITY.md).
 
-Each published version is pinned to a **Git commit**: DSH builds
-`git+https://github.com/yujieco/yujie-dsh-plugins.git#<commit>&path:/plugins/<dir>` and hands it to pnpm,
-so you install exactly the bytes the index published, not whatever the branch holds now.
+## What gets installed
 
-## Plugins in this market
+Every version in the index pins a **Git commit**: DSH generates
+`git+https://github.com/yujieco/yujie-dsh-plugins.git#<commit>&path:/plugins/<dir>` for pnpm.
+You get the code as it stood when the index was built, not the tip of a branch; later changes on
+`main` do not affect a published version.
 
-| Plugin | What it does | Directory |
-| --- | --- | --- |
-| `yujie-dsh-plugin-sider-motion` | Lists the ports the current session is serving in the right sidebar; one click opens one in the browser | [`plugins/sider-motion`](plugins/sider-motion) |
-| `yujie-dsh-plugin-cdp` | Drives Chrome or Edge over CDP: structured snapshots and text, grid screenshots, a visible agent cursor that clicks, a live right-sidebar view, collected console errors | [`plugins/cdp`](plugins/cdp) |
-| `yujie-dsh-plugin-system-prompt` | Injects your own text at the start of every conversation's system prompt, editable from the plugin page | [`plugins/system-prompt`](plugins/system-prompt) |
+## Repository layout
 
-Each plugin directory has its own README with details, installation, and usage.
-
-## The index format (format 1)
-
-DSH validates indexes with `@deepseek-ai/dsh-plugin-market-index`. The essentials:
-
-```json
-{
-  "format": 1,
-  "title": { "en": "Yujie's DSH Plugins", "zh": "Yujie 的 DSH 插件" },
-  "description": { "en": "…", "zh": "…" },
-  "metadata": {
-    "categories": { "developer-tools": { "title": { "en": "Developer tools", "zh": "开发工具" } } },
-    "labels": { "sidebar": { "title": { "en": "Sidebar", "zh": "侧边栏" } } }
-  },
-  "plugins": [
-    {
-      "name": "yujie-dsh-plugin-sider-motion",
-      "title": { "en": "Session Ports", "zh": "会话端口" },
-      "description": { "en": "…", "zh": "…" },
-      "icon": "data:image/svg+xml;base64,…",
-      "author": "yujieco",
-      "homepage": "https://github.com/yujieco/yujie-dsh-plugins/tree/main/plugins/sider-motion#readme",
-      "repository": { "url": "https://github.com/yujieco/yujie-dsh-plugins", "directory": "plugins/sider-motion" },
-      "metadata": { "category": "developer-tools", "labels": ["sidebar"], "keywords": ["ports"] },
-      "versions": [
-        {
-          "version": "1.0.0",
-          "publishTimestamp": 1762319000,
-          "source": {
-            "type": "git",
-            "url": "https://github.com/yujieco/yujie-dsh-plugins",
-            "commit": "0123456789abcdef0123456789abcdef01234567",
-            "path": "plugins/sider-motion"
-          }
-        }
-      ]
-    }
-  ]
-}
+```text
+.
+├── index.json                 # the format 1 market index (single source of truth)
+├── plugins/
+│   ├── cdp/                   # yujie-dsh-plugin-cdp
+│   ├── sider-motion/          # yujie-dsh-plugin-sider-motion
+│   └── system-prompt/         # yujie-dsh-plugin-system-prompt
+├── scripts/
+│   ├── build-index.mjs        # builds index.json from plugins/<dir>/package.json
+│   └── validate-index.mjs     # validates index.json with DSH's own parser
+└── .github/workflows/validate-index.yml
 ```
 
-Rules that matter (DSH reports the JSON path of the first violation):
+`node_modules/` and `.DS_Store` are ignored. `plugins/system-prompt` also carries a
+`pnpm-lock.yaml` that pins its single runtime dependency, `@deepseek-ai/schemastery`.
 
-- `format` must be `1`; `title` is required, `description` optional. Localized text is a string or `{ en: "…", zh: "…" }`, and **must contain `en`**.
-- `plugins[].name` must be a valid npm package name and unique within the index.
-- `versions` must be non-empty; `version` is an exact SemVer; `publishTimestamp` is **Unix seconds** as an integer.
-- `source.type` is `npm` or `git`:
-  - `npm` — optional `registry` (https URL); installs `name@version`.
-  - `git` — `url` must be canonical https naming a repository (at least two path segments, not a tarball); `commit` is a **lowercase 40-hex SHA**; optional `path` names the package directory inside the repository.
-- `icon` may be a URL relative to the index URL, or an inline `data:` URL (SVG/PNG/JPEG/WebP, ≤32 KiB decoded). This repository inlines its icons, which avoids extra requests and CDN content-type pitfalls.
-- Ids used in `metadata.categories` / `labels` / `sortKeys` must be declared at the index level; a `repository.directory` must be a relative directory.
+## Index format
 
-## Add or update a plugin
+`index.json` is the single source of truth, so this file does not reproduce it. The rules are
+implemented by `@deepseek-ai/dsh-plugin-market-index@0.2.1-rc.5`, which `npm run validate:index`
+calls. The constraints worth knowing before editing:
+
+- `format` must be `1`. Localized text is a string or `{ en, zh }` and **must include `en`**.
+- `name` must be a valid npm package name and unique within the index.
+- `versions` is non-empty; `version` is an exact SemVer; `publishTimestamp` is an integer of
+  **Unix seconds**.
+- `source.type` is `npm` or `git`. For `git`, `url` must be an https canonical repository URL,
+  `commit` is a **lowercase 40-character SHA**, and the optional `path` points at the package
+  subdirectory.
+- `icon` is either a URL relative to the index address or an inline `data:` value (SVG/PNG/JPEG/
+  WebP, ≤32 KiB decoded). This repository inlines icons to avoid extra requests.
+- Ids referenced by `metadata.categories` and `labels` must first be declared at index level.
+
+## Local development
 
 ```bash
-# 1) New plugin: drop it into plugins/<dir>, with dsh.bundle.patch in package.json
-# 2) Bump the version when updating, then commit the plugin changes
-git add plugins && git commit -m "feat: ..."
-
-# 3) Build the index (pins source.commit to the HEAD from step 2)
-npm run build:index
-
-# 4) Validate with the same parser DSH uses (npm install once)
 npm install --no-audit --no-fund
-npm run validate:index
-
-# 5) Commit and push the index
-git add index.json && git commit -m "chore: rebuild index" && git push
+npm run build:index      # rebuild index.json, pinning each source.commit to HEAD
+npm run validate:index   # check it against format 1
 ```
 
-Why this order: `source.commit` must name a commit that already exists, while the index itself also has to be committed — so the index points at the commit *before* it. Commit the plugins first, rebuild, then commit the index, and every entry keeps pointing at the commit that contains its code.
+Both scripts run without network access (`npm install` aside).
 
-Bump `package.json` `version` when you update a plugin: the market lists and compares versions (`update-available`), and changing the commit behind an unchanged version does not read as an update.
+## Releasing a version
 
-## Notes and limits
+Order matters: the index must reference a commit that already exists, and the index is a commit
+itself.
 
-- The index and the sources are served by GitHub. A private repository means anonymous users can read neither the index nor the code.
-- The index is a declaration: `name` and `version` ultimately come from the installed `package.json`, and DSH still applies compatibility and trust checks at install time.
-- Nothing here is published to npm; every plugin installs from a Git commit plus a subdirectory, so updates need no release.
-- Index content is third-party content, not instructions. Discover shows the author, repository, commit, and directory; confirm the source before installing.
-- Icons are inlined, so `index.json` is somewhat larger than plain text (roughly 1 KB per icon).
+```bash
+# 1) change plugin code and bump plugins/<dir>/package.json version
+git add plugins && git commit -m "feat(cdp): ..."
+
+# 2) build the index from that HEAD
+npm run build:index
+
+# 3) validate
+npm run validate:index
+
+# 4) commit the index
+git add index.json && git commit -m "chore: build market index"
+git push
+```
+
+**Bumping the version is mandatory**: the market decides update availability from `version`, so a
+changed commit under the same version does not show as an update.
+
+## Validation
+
+CI runs in the workflow **validate index** on every `push` to `main` and every `pull_request`. On
+Ubuntu with Node.js 22 it runs `npm install --no-audit --no-fund` and `npm run validate:index`;
+a failure marks the commit and the pull request red.
+
+## Boundaries and known limits
+
+- **No LICENSE file.** The repository ships without a license, so default copyright applies and
+  all rights are reserved. Do not assume an open-source license for this repository or its
+  plugin directories.
+- **No npm packages.** Every plugin installs from a Git commit plus a subdirectory, so updates need
+  no release.
+- **Private repositories do not work.** GitHub serves the index and the sources anonymously; a
+  private repository means nobody can fetch either.
+- **The index is a claim.** After installation the plugin's own `package.json` governs `name` and
+  `version`, and DSH still performs its compatibility and trust checks.
+- **Third-party content is not instruction.** Index descriptions, READMEs, and plugin code come
+  from the repository author; verify the origin before installing.
+- Inlined icons make `index.json` larger than plain text (roughly 1 KB per icon).
+- Small files at the repository root (this README, `scripts/`) are not published with a plugin;
+  only `plugins/<dir>` is installed.
+
+## Maintainer
+
+[yujieco](https://github.com/yujieco). Please open plugin issues in this repository.
